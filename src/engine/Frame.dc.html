@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="{{ rootStyle }}" dir="{{ dir }}">
+
+  <!-- DUO: phone + mac -->
+  <sc-if value="{{ isDuo }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ duoWrapStyle }}">
+      <div style="{{ duoMacStyle }}">
+        <div style="{{ duoMacBarStyle }}"><div style="width:7px;height:7px;border-radius:50%;background:#ff5f57;"></div><div style="width:7px;height:7px;border-radius:50%;background:#febc2e;"></div><div style="width:7px;height:7px;border-radius:50%;background:#28c840;"></div></div>
+        <div style="{{ duoMacScreenStyle }}">
+          <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><div style="{{ curImageStyle }}"></div></sc-if>
+          <sc-if value="{{ noImage }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;height:100%;"><div style="width:32%;background:#f6f6f8;border-right:1px solid #ececef;padding:11px 9px;"><div style="height:7px;width:70%;border-radius:4px;background:{{ accent }};"></div><div style="height:6px;width:88%;border-radius:4px;background:#e7e7ea;margin-top:10px;"></div><div style="height:6px;width:60%;border-radius:4px;background:#ececed;margin-top:7px;"></div><div style="height:6px;width:74%;border-radius:4px;background:#ececed;margin-top:7px;"></div></div><div style="flex:1;padding:13px 14px;"><div style="height:9px;width:48%;border-radius:4px;background:#e7e7ea;"></div><div style="height:52px;border-radius:9px;background:{{ accent }};margin-top:11px;opacity:.92;"></div><div style="display:flex;gap:9px;margin-top:11px;"><div style="flex:1;height:34px;border-radius:8px;background:#f0f0f2;"></div><div style="flex:1;height:34px;border-radius:8px;background:#f0f0f2;"></div></div></div></div>
+          </sc-if>
+        </div>
+      </div>
+      <div style="{{ duoPhoneBezelStyle }}">
+        <div style="{{ duoPhoneScreenStyle }}">
+          <div style="{{ duoIslandStyle }}"></div>
+          <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><div style="{{ curImageStyle }}"></div></sc-if>
+          <sc-if value="{{ noImage }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:24px 9px 0;"><div style="height:8px;width:60%;border-radius:4px;background:#e7e7ea;"></div><div style="height:46px;border-radius:10px;background:{{ accent }};margin-top:10px;"></div><div style="height:7px;width:80%;border-radius:4px;background:#ececed;margin-top:11px;"></div><div style="height:7px;width:55%;border-radius:4px;background:#f1f1f3;margin-top:7px;"></div></div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- SOLO phone/tablet -->
+  <sc-if value="{{ isSolo }}" hint-placeholder-val="{{ true }}">
+    <sc-if value="{{ isMulti }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ ghostWrapStyle }}">
+        <div style="{{ ghostBezelStyle }}"><div style="{{ ghostScreenStyle }}">
+          <div style="{{ islandStyle }}"></div>
+          <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><div style="{{ curImageStyle }}"></div></sc-if>
+          <sc-if value="{{ noImage }}" hint-placeholder-val="{{ true }}">
+            <div style="height:50px;"></div>
+            <div style="margin:0 16px;height:70px;border-radius:14px;background:{{ accent }};"></div>
+            <div style="margin:14px 16px 0;height:12px;border-radius:5px;background:#ececef;"></div>
+            <div style="margin:9px 16px 0;height:12px;width:62%;border-radius:5px;background:#f1f1f3;"></div>
+          </sc-if>
+        </div></div>
+      </div>
+    </sc-if>
+
+    <div style="{{ phoneWrapStyle }}">
+      <!-- BLEED: image fills, no bezel -->
+      <sc-if value="{{ isBleed }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ bleedBoxStyle }}">
+          <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><div style="{{ curImageStyle }}"></div></sc-if>
+          <sc-if value="{{ noImage }}" hint-placeholder-val="{{ true }}"><div style="{{ bleedHintStyle }}">Drop a screenshot</div></sc-if>
+          <sc-if value="{{ showVideo }}" hint-placeholder-val="{{ false }}"><div style="{{ videoOverlayStyle }}"><div style="{{ playBtnStyle }}"><div style="{{ playTriStyle }}"></div></div></div></sc-if>
+          {{ statusIcons }}
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isBezeled }}" hint-placeholder-val="{{ true }}">
+        <div style="{{ bezelStyle }}">
+          <div style="{{ screenStyle }}">
+            <div style="{{ islandStyle }}"></div>
+            {{ statusIcons }}
+
+            <sc-if value="{{ isCompare }}" hint-placeholder-val="{{ false }}">
+              <div style="{{ cmpBeforeStyle }}"></div>
+              <div style="{{ cmpAfterStyle }}"></div>
+              <div style="{{ cmpDividerStyle }}"></div>
+              <div style="{{ cmpBeforeLabel }}">Before</div>
+              <div style="{{ cmpAfterLabel }}">After</div>
+              <sc-if value="{{ cmpEmpty }}" hint-placeholder-val="{{ true }}"><div style="{{ cmpHintStyle }}">Add Before &amp; After ↑</div></sc-if>
+            </sc-if>
+
+            <sc-if value="{{ isPano }}" hint-placeholder-val="{{ false }}"><div style="{{ panoStyle }}"></div></sc-if>
+
+            <sc-if value="{{ isPlain }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><div style="{{ curImageStyle }}"></div></sc-if>
+              <sc-if value="{{ noImage }}" hint-placeholder-val="{{ true }}">
+                <div style="{{ skelPadStyle }}">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div>
+                      <div style="font-size:9.5px;font-weight:700;letter-spacing:.11em;color:#a1a1aa;">TUE · JUN 28</div>
+                      <div style="font-size:19px;font-weight:700;color:#18181b;margin-top:3px;font-family:'Manrope',sans-serif;">Good morning</div>
+                    </div>
+                    <div style="width:30px;height:30px;border-radius:50%;background:#ececef;"></div>
+                  </div>
+                  <div style="{{ heroStyle }}">
+                    <div style="font-size:11px;opacity:.85;">Today’s focus</div>
+                    <div style="font-size:15px;font-weight:700;margin-top:4px;">3 tasks · 2 hrs</div>
+                    <div style="position:absolute;right:-12px;bottom:-16px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.16);"></div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:11px;margin-top:15px;">
+                    <div style="width:30px;height:30px;border-radius:9px;background:#f0f0f2;flex:none;"></div>
+                    <div style="flex:1;"><div style="height:9px;width:70%;border-radius:5px;background:#e7e7ea;"></div><div style="height:8px;width:42%;border-radius:5px;background:#f1f1f3;margin-top:7px;"></div></div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:11px;margin-top:13px;">
+                    <div style="width:30px;height:30px;border-radius:9px;background:#f0f0f2;flex:none;"></div>
+                    <div style="flex:1;"><div style="height:9px;width:58%;border-radius:5px;background:#e7e7ea;"></div><div style="height:8px;width:36%;border-radius:5px;background:#f1f1f3;margin-top:7px;"></div></div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:11px;margin-top:13px;">
+                    <div style="width:30px;height:30px;border-radius:9px;background:#f0f0f2;flex:none;"></div>
+                    <div style="flex:1;"><div style="height:9px;width:64%;border-radius:5px;background:#e7e7ea;"></div><div style="height:8px;width:30%;border-radius:5px;background:#f1f1f3;margin-top:7px;"></div></div>
+                  </div>
+                </div>
+                <div style="{{ navBarStyle }}">
+                  <div style="width:18px;height:18px;border-radius:6px;background:{{ accent }};"></div>
+                  <div style="width:18px;height:18px;border-radius:6px;background:#e4e4e7;"></div>
+                  <div style="width:18px;height:18px;border-radius:6px;background:#e4e4e7;"></div>
+                  <div style="width:18px;height:18px;border-radius:6px;background:#e4e4e7;"></div>
+                </div>
+              </sc-if>
+            </sc-if>
+
+            <sc-if value="{{ showVideo }}" hint-placeholder-val="{{ false }}">
+              <div style="{{ videoOverlayStyle }}"><div style="{{ playBtnStyle }}"><div style="{{ playTriStyle }}"></div></div></div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- OFFICIAL ART -->
+  <sc-if value="{{ isArt }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ artBoxStyle }}">
+      <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><div style="{{ artShotStyle }}"></div></sc-if>
+      <sc-if value="{{ noImage }}" hint-placeholder-val="{{ true }}"><div style="{{ artHintStyle }}">Drop a screenshot</div></sc-if>
+      <img style="{{ artImgStyle }}" src="{{ artSrc }}" />
+    </div>
+  </sc-if>
+
+  <!-- MAC -->
+  <sc-if value="{{ isMac }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ macWinStyle }}">
+      <div style="{{ macBarStyle }}">
+        <div style="width:11px;height:11px;border-radius:50%;background:#ff5f57;"></div>
+        <div style="width:11px;height:11px;border-radius:50%;background:#febc2e;"></div>
+        <div style="width:11px;height:11px;border-radius:50%;background:#28c840;"></div>
+      </div>
+      <div style="{{ macScreenStyle }}">
+        <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><div style="{{ curImageStyle }}"></div></sc-if>
+        <sc-if value="{{ noImage }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;height:100%;">
+            <div style="width:30%;background:#f6f6f8;border-right:1px solid #ececef;padding:16px 14px;">
+              <div style="height:11px;width:70%;border-radius:5px;background:{{ accent }};opacity:.85;"></div>
+              <div style="height:9px;width:90%;border-radius:5px;background:#e7e7ea;margin-top:16px;"></div>
+              <div style="height:9px;width:60%;border-radius:5px;background:#ececed;margin-top:10px;"></div>
+              <div style="height:9px;width:78%;border-radius:5px;background:#ececed;margin-top:10px;"></div>
+              <div style="height:9px;width:52%;border-radius:5px;background:#ececed;margin-top:10px;"></div>
+            </div>
+            <div style="flex:1;padding:22px 24px;">
+              <div style="height:16px;width:46%;border-radius:6px;background:#e7e7ea;"></div>
+              <div style="height:96px;border-radius:14px;background:{{ accent }};margin-top:18px;opacity:.92;"></div>
+              <div style="display:flex;gap:14px;margin-top:18px;">
+                <div style="flex:1;height:64px;border-radius:12px;background:#f0f0f2;"></div>
+                <div style="flex:1;height:64px;border-radius:12px;background:#f0f0f2;"></div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showVideo }}" hint-placeholder-val="{{ false }}"><div style="{{ videoOverlayStyle }}"><div style="{{ playBtnStyle }}"><div style="{{ playTriStyle }}"></div></div></div></sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- WATCH -->
+  <sc-if value="{{ isWatch }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ watchCrownStyle }}"></div>
+    <div style="{{ bezelStyle }}">
+      <div style="{{ screenStyle }}">
+        <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><div style="{{ curImageStyle }}"></div></sc-if>
+        <sc-if value="{{ noImage }}" hint-placeholder-val="{{ true }}">
+          <div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;color:#fff;padding:14px;">
+            <div style="font-size:10px;letter-spacing:.06em;opacity:.6;">9:41</div>
+            <div style="width:54px;height:54px;border-radius:50%;border:5px solid {{ accent }};border-top-color:rgba(255,255,255,.15);margin-top:10px;"></div>
+            <div style="font-size:12px;font-weight:700;margin-top:10px;">68%</div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:260,&quot;height&quot;:520}}">
+class Component extends DCLogic {
+  isLight(hex){ if(!hex||hex[0]!=='#')return false; let h=hex.slice(1); if(h.length===3)h=h.split('').map(x=>x+x).join(''); const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16); return (0.299*r+0.587*g+0.114*b)/255>0.7; }
+  appAccent(c){ return this.isLight(c)?'#6d5cf5':(c||'#6d5cf5'); }
+
+  renderVals(){
+    const d=this.props.screen||{};
+    const kind=this.props.kind||'phone';
+    const os=this.props.os||'ios';
+    const orient=this.props.orientation||'portrait';
+    const bezel=this.props.bezel||'black';
+    const clayColor=this.props.clayColor||'#6d5cf5';
+    const dir=this.props.dir||'ltr';
+    const pano=this.props.pano||null;
+    const bgImg=(u)=>`url("${u}")`;
+
+    const art=this.props.frameArt||null;
+    const isPhoneTablet=!art&&(kind==='phone'||kind==='tablet');
+    const isMac=!art&&kind==='mac', isWatch=!art&&kind==='watch';
+    let treat=d.treatment||'plain';
+    if(!isPhoneTablet && (treat==='multi'||treat==='pano'||treat==='compare'||treat==='angled'||treat==='duo'||treat==='bleed')) treat='plain';
+
+    let M;
+    if(kind==='phone') M = orient==='landscape'
+      ? {w:470,h:230,radius:30,pad:8,screenR:24,island:(os==='ios'?'pill':'dot'),horiz:true}
+      : {w:226,h:462,radius:38,pad:8,screenR:31,island:(os==='ios'?'pill':'dot')};
+    else if(kind==='tablet') M = orient==='landscape'
+      ? {w:486,h:366,radius:24,pad:11,screenR:14,island:'cam',horiz:true}
+      : {w:366,h:486,radius:26,pad:11,screenR:16,island:'cam'};
+    else if(kind==='watch') M={w:158,h:192,radius:44,pad:9,screenR:34,island:'none'};
+    else M={w:660,h:404,radius:14,pad:0,screenR:12,island:'none'};
+
+    // device-model / camera cutout override (phones, portrait)
+    const notch=this.props.notch||'auto';
+    if(kind==='phone' && !M.horiz && notch!=='auto'){ M.island = (notch==='island'?'island':notch==='notch'?'notch':notch==='punch'?'punch':notch==='none'?'none':M.island); }
+
+    const bezelBg = bezel==='clay'?clayColor:(bezel==='white'?'#e9e9ec':'#0a0a0c');
+    const bezelInset = bezel==='white'?'rgba(0,0,0,.10)':'rgba(255,255,255,.10)';
+    const A2=this.appAccent(d.accent);
+
+    // root natural size (official art keeps the bezel's own aspect at M height)
+    let natW=M.w,natH=M.h;
+    if(art){ natH=M.h; natW=Math.round(M.h*(art.w/art.h)); }
+    const isDuo=treat==='duo'&&isPhoneTablet;
+    if(isDuo){ natW=304; natH=236; }
+    const rootStyle={position:'relative',width:natW+'px',height:natH+'px',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Manrope',sans-serif"};
+
+    const hasImage=!!d.image, noImage=!d.image;
+    const curImageStyle={position:'absolute',inset:0,backgroundImage:hasImage?bgImg(d.image):'none',backgroundSize:'cover',backgroundPosition:'center',zIndex:1};
+
+    // treatment outer transform (angled) + free 3D pose (rx3d/ry3d props, degrees)
+    let bodyTransform='none';
+    if(treat==='angled') bodyTransform=dir==='rtl'?'perspective(1300px) rotateY(16deg) rotate(5deg)':'perspective(1300px) rotateY(-16deg) rotate(-5deg)';
+    const rx3=+(this.props.rx3d||0), ry3=+(this.props.ry3d||0);
+    if(rx3||ry3) bodyTransform='perspective(1400px) rotateX('+rx3+'deg) rotateY('+ry3+'deg)'+(treat==='angled'?(dir==='rtl'?' rotate(5deg)':' rotate(-5deg)'):'');
+    const phoneWrapStyle={transform:bodyTransform,transformOrigin:'center',position:'relative',zIndex:2};
+
+    const isBleed=treat==='bleed';
+    const isBezeled=!isBleed;
+    const isMulti=treat==='multi';
+    const isSolo=isPhoneTablet&&!isDuo;
+    const isCompare=treat==='compare';
+    const isPano=treat==='pano';
+    const isPlain=!isCompare&&!isPano;
+
+    const bezelStyle={width:M.w+'px',height:M.h+'px',background:bezelBg,borderRadius:M.radius+'px',padding:M.pad+'px',boxShadow:'0 30px 60px -22px rgba(0,0,0,.55), inset 0 0 0 1.5px '+bezelInset};
+    const screenStyle={width:'100%',height:'100%',background:'#ffffff',borderRadius:M.screenR+'px',overflow:'hidden',position:'relative'};
+    const bleedBoxStyle={width:M.w+'px',height:M.h+'px',borderRadius:M.radius+'px',overflow:'hidden',position:'relative',background:'#e9e9ee',boxShadow:'0 30px 60px -22px rgba(0,0,0,.5)'};
+    const bleedHintStyle={position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'14px',fontWeight:600,color:'#a1a1aa'};
+
+    const ghostWrapStyle={position:'absolute',transform:'scale(0.66) translateX(58%) translateY(3%) rotate(8deg)',transformOrigin:'center',opacity:.95,zIndex:1};
+    const ghostBezelStyle={width:M.w+'px',height:M.h+'px',background:bezelBg,borderRadius:M.radius+'px',padding:M.pad+'px'};
+    const ghostScreenStyle={width:'100%',height:'100%',background:'#fff',borderRadius:M.screenR+'px',overflow:'hidden',position:'relative'};
+
+    let islandStyle;
+    if(M.island==='pill') islandStyle={position:'absolute',top:M.horiz?'50%':'10px',left:M.horiz?'10px':'50%',transform:M.horiz?'translateY(-50%)':'translateX(-50%)',width:M.horiz?'22px':'78px',height:M.horiz?'78px':'22px',background:'#0a0a0c',borderRadius:'12px',zIndex:5};
+    else if(M.island==='island') islandStyle={position:'absolute',top:'11px',left:'50%',transform:'translateX(-50%)',width:'92px',height:'26px',background:'#0a0a0c',borderRadius:'14px',zIndex:5};
+    else if(M.island==='notch') islandStyle={position:'absolute',top:'0',left:'50%',transform:'translateX(-50%)',width:'132px',height:'22px',background:'#0a0a0c',borderRadius:'0 0 15px 15px',zIndex:5};
+    else if(M.island==='punch') islandStyle={position:'absolute',top:'11px',left:'50%',transform:'translateX(-50%)',width:'11px',height:'11px',background:'#0a0a0c',borderRadius:'50%',boxShadow:'0 0 0 2px rgba(0,0,0,.25)',zIndex:5};
+    else if(M.island==='dot') islandStyle={position:'absolute',top:M.horiz?'50%':'12px',left:M.horiz?'12px':'50%',transform:M.horiz?'translateY(-50%)':'translateX(-50%)',width:'9px',height:'9px',background:'#0a0a0c',borderRadius:'50%',zIndex:5};
+    else if(M.island==='cam') islandStyle={position:'absolute',top:M.horiz?'50%':'9px',left:M.horiz?'9px':'50%',transform:M.horiz?'translateY(-50%)':'translateX(-50%)',width:'7px',height:'7px',background:'#0a0a0c',borderRadius:'50%',zIndex:5};
+    else islandStyle={display:'none'};
+
+    const bigTop=(M.island==='pill'||M.island==='island'||M.island==='notch');
+    const skelPadStyle={padding:(bigTop&&!M.horiz)?'48px 16px 0':'22px 16px 0'};
+    const navBarStyle={position:'absolute',bottom:0,left:0,right:0,height:'46px',background:'rgba(255,255,255,.94)',borderTop:'1px solid #f0f0f2',display:'flex',justifyContent:'space-around',alignItems:'center'};
+    const heroStyle={position:'relative',overflow:'hidden',background:A2,borderRadius:'16px',height:'92px',marginTop:'16px',padding:'14px',color:'#ffffff',boxShadow:'0 8px 22px -10px '+A2};
+
+    // pano
+    const pIdx=pano?pano.idx:0, pLen=pano?pano.len:1;
+    const pImg=pano&&pano.img?pano.img:d.image;
+    const pBg=pano&&pano.bg?pano.bg:(d.bg||'#222');
+    const panoBase={position:'absolute',top:0,bottom:0,left:(-(pIdx)*100)+'%',width:(pLen*100)+'%',backgroundSize:'cover',backgroundPosition:'center',zIndex:1};
+    const panoStyle=pImg?Object.assign({},panoBase,{backgroundImage:bgImg(pImg)}):Object.assign({},panoBase,{background:pBg});
+
+    // compare
+    const beforeImg=d.beforeImage, afterImg=d.image;
+    const cmpEmpty=!beforeImg&&!afterImg;
+    const cmpBeforeStyle={position:'absolute',inset:0,zIndex:1,clipPath:'inset(0 50% 0 0)',backgroundImage:beforeImg?bgImg(beforeImg):'none',backgroundColor:'#e9e9ee',backgroundSize:'cover',backgroundPosition:'center'};
+    const cmpAfterStyle={position:'absolute',inset:0,zIndex:1,clipPath:'inset(0 0 0 50%)',backgroundImage:afterImg?bgImg(afterImg):'none',backgroundColor:'#d7d7e0',backgroundSize:'cover',backgroundPosition:'center'};
+    const cmpDividerStyle={position:'absolute',top:0,bottom:0,left:'50%',width:'3px',transform:'translateX(-50%)',background:'#fff',boxShadow:'0 0 0 1px rgba(0,0,0,.08)',zIndex:3};
+    const cmpLabelBase={position:'absolute',bottom:'14px',zIndex:4,fontSize:'11px',fontWeight:700,letterSpacing:'.04em',color:'#18181b',background:'rgba(255,255,255,.92)',padding:'4px 9px',borderRadius:'999px',boxShadow:'0 2px 6px rgba(0,0,0,.12)'};
+    const cmpBeforeLabel=Object.assign({},cmpLabelBase,{left:'12px'});
+    const cmpAfterLabel=Object.assign({},cmpLabelBase,{right:'12px'});
+    const cmpHintStyle={position:'absolute',inset:0,zIndex:4,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'12px',fontWeight:600,color:'#71717a',textAlign:'center',padding:'0 24px'};
+
+    // duo
+    const duoWrapStyle={position:'relative',width:'304px',height:'236px'};
+    const duoMacStyle={position:'absolute',top:0,left:'4px',width:'286px',height:'182px',background:'#fff',borderRadius:'12px',overflow:'hidden',boxShadow:'0 26px 56px -22px rgba(0,0,0,.6), inset 0 0 0 1px rgba(0,0,0,.06)',display:'flex',flexDirection:'column'};
+    const duoMacBarStyle={height:'22px',flex:'none',background:'#f1f1f3',borderBottom:'1px solid #e7e7ea',display:'flex',alignItems:'center',gap:'5px',padding:'0 9px'};
+    const duoMacScreenStyle={flex:1,position:'relative',overflow:'hidden',background:'#fff'};
+    const duoPhoneBezelStyle={position:'absolute',right:0,bottom:0,width:'108px',height:'216px',background:bezelBg,borderRadius:'26px',padding:'6px',boxShadow:'0 24px 50px -16px rgba(0,0,0,.65), inset 0 0 0 1.2px '+bezelInset,zIndex:2};
+    const duoPhoneScreenStyle={width:'100%',height:'100%',background:'#fff',borderRadius:'21px',overflow:'hidden',position:'relative'};
+    const duoIslandStyle={position:'absolute',top:'7px',left:'50%',transform:'translateX(-50%)',width:'40px',height:'12px',background:'#0a0a0c',borderRadius:'8px',zIndex:5};
+
+    const showVideo=!!d.showVideo;
+    // status bar
+    const showStatusBar=!!d.showStatus && isPhoneTablet;
+    const stColor=d.statusDark?'#0a0a0c':'#ffffff';
+    const statusBarStyle={position:'absolute',top:0,left:0,right:0,height:(bigTop?'30px':'24px'),display:'flex',alignItems:'center',justifyContent:'space-between',padding:M.horiz?'0 16px':'0 18px',zIndex:6,color:stColor,fontFamily:"'Manrope',sans-serif",fontSize:'12px',fontWeight:700,pointerEvents:'none'};
+    const sigBar=(h)=>React.createElement('div',{key:'s'+h,style:{width:'3px',height:h+'px',background:stColor,borderRadius:'1px'}});
+    const battery=React.createElement('div',{key:'b',style:{display:'flex',alignItems:'center',gap:'1.5px'}},[
+      React.createElement('div',{key:'o',style:{width:'22px',height:'11px',borderRadius:'3px',border:'1px solid '+stColor,padding:'1.5px',boxSizing:'border-box'}}, React.createElement('div',{style:{width:'72%',height:'100%',background:stColor,borderRadius:'1px'}})),
+      React.createElement('div',{key:'n',style:{width:'1.5px',height:'4px',background:stColor,borderRadius:'1px',opacity:.7}})
+    ]);
+    const statusIcons=showStatusBar?React.createElement('div',{style:statusBarStyle},[
+      React.createElement('span',{key:'t'},'9:41'),
+      React.createElement('div',{key:'r',style:{display:'flex',alignItems:'flex-end',gap:'6px'}},[
+        React.createElement('div',{key:'sig',style:{display:'flex',alignItems:'flex-end',gap:'2px'}},[sigBar(4),sigBar(6),sigBar(8),sigBar(10)]),
+        battery
+      ])
+    ]):null;
+    const videoOverlayStyle={position:'absolute',inset:0,zIndex:6,display:'flex',alignItems:'center',justifyContent:'center',background:'rgba(10,10,14,.22)'};
+    const playBtnStyle={width:'58px',height:'58px',borderRadius:'50%',background:'rgba(255,255,255,.92)',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 8px 24px -6px rgba(0,0,0,.5)'};
+    const playTriStyle={width:0,height:0,marginLeft:'4px',borderTop:'11px solid transparent',borderBottom:'11px solid transparent',borderLeft:'18px solid #18181b'};
+
+    const macWinStyle={width:M.w+'px',height:M.h+'px',background:'#ffffff',borderRadius:M.radius+'px',overflow:'hidden',boxShadow:'0 36px 80px -28px rgba(0,0,0,.6), inset 0 0 0 1px rgba(0,0,0,.06)',display:'flex',flexDirection:'column'};
+    const macBarStyle={height:'34px',flex:'none',background:'#f1f1f3',borderBottom:'1px solid #e4e4e7',display:'flex',alignItems:'center',gap:'8px',padding:'0 14px'};
+    const macScreenStyle={flex:1,position:'relative',overflow:'hidden',background:'#fff'};
+    const watchCrownStyle={position:'absolute',right:'-6px',top:'42%',width:'9px',height:'34px',borderRadius:'4px',background:bezelBg,zIndex:1};
+
+    const isArt=!!art;
+    const artBoxStyle=art?{position:'relative',width:natW+'px',height:natH+'px'}:{display:'none'};
+    const artShotStyle=art?{position:'absolute',left:art.hole.x+'%',top:art.hole.y+'%',width:art.hole.w+'%',height:art.hole.h+'%',backgroundImage:hasImage?bgImg(d.image):'none',backgroundSize:'cover',backgroundPosition:'center',borderRadius:Math.round(natW*0.055)+'px',overflow:'hidden'}:{};
+    const artHintStyle=art?{position:'absolute',left:art.hole.x+'%',top:art.hole.y+'%',width:art.hole.w+'%',height:art.hole.h+'%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'13px',fontWeight:600,color:'#a1a1aa',background:'#e9e9ee',borderRadius:Math.round(natW*0.055)+'px'}:{};
+    const artImgStyle=art?{position:'absolute',inset:0,width:'100%',height:'100%',pointerEvents:'none'}:{};
+    const artSrc=art?art.src:'';
+
+    return {
+      isArt, artBoxStyle, artShotStyle, artHintStyle, artImgStyle, artSrc,
+      dir, rootStyle, accent:A2,
+      isPhoneTablet, isMac, isWatch, isDuo, isSolo, isMulti, isBleed, isBezeled, isCompare, isPano, isPlain,
+      hasImage, noImage, curImageStyle, phoneWrapStyle,
+      bezelStyle, screenStyle, bleedBoxStyle, bleedHintStyle,
+      ghostWrapStyle, ghostBezelStyle, ghostScreenStyle,
+      islandStyle, skelPadStyle, navBarStyle, heroStyle, panoStyle,
+      cmpBeforeStyle, cmpAfterStyle, cmpDividerStyle, cmpBeforeLabel, cmpAfterLabel, cmpEmpty, cmpHintStyle,
+      duoWrapStyle, duoMacStyle, duoMacBarStyle, duoMacScreenStyle, duoPhoneBezelStyle, duoPhoneScreenStyle, duoIslandStyle,
+      showVideo, videoOverlayStyle, playBtnStyle, playTriStyle, statusIcons, showStatusBar,
+      macWinStyle, macBarStyle, macScreenStyle, watchCrownStyle,
+    };
+  }
+}
+</script>
+</body>
+</html>

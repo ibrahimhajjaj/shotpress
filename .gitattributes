@@ -1,0 +1,4 @@
+* text=auto eol=lf
+src/vendor/*.js -text
+src/engine/*.js -text
+src/engine/*.dc.html -text
