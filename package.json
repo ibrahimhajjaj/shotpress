@@ -1,0 +1,43 @@
+{
+  "name": "shotpress",
+  "version": "0.3.0",
+  "description": "App Store / Google Play screenshot builder — render store-ready screenshot sets from a JSON spec",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ibrahimhajjaj/shotpress.git"
+  },
+  "type": "module",
+  "bin": {
+    "shotpress": "cli.js"
+  },
+  "engines": {
+    "node": ">=18.19"
+  },
+  "files": [
+    "cli.js",
+    "src",
+    "templates",
+    "README.md",
+    "NOTICE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:e2e": "SHOTPRESS_E2E=1 node --test test/e2e.test.js"
+  },
+  "homepage": "https://github.com/ibrahimhajjaj/shotpress",
+  "bugs": "https://github.com/ibrahimhajjaj/shotpress/issues",
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "playwright-core": "^1.49.0"
+  },
+  "keywords": [
+    "app-store",
+    "screenshots",
+    "play-store",
+    "aso",
+    "device-mockup",
+    "claude-code",
+    "claude-plugin"
+  ]
+}

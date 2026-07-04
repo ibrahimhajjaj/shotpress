@@ -1,0 +1,5 @@
+node_modules/
+shotpress-out/
+shotpress-captures/
+shotpress-variants/
+*.tgz

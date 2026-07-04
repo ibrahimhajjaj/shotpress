@@ -1,0 +1,11 @@
+shotpress bundles the following third-party components:
+
+- React and ReactDOM 18.3.1 (src/vendor/) — MIT License, Copyright (c) Meta
+  Platforms, Inc. and affiliates. License headers are preserved in the files.
+- Space Grotesk, Manrope, Instrument Serif, and Cairo font subsets
+  (src/fonts/*.woff2) — each licensed under the SIL Open Font License 1.1,
+  copyright their respective type foundries. The OFL text is available at
+  https://openfontlicense.org and applies to the font files only.
+
+Official Apple product bezels are never bundled; `shotpress frames install`
+downloads them directly from Apple under Apple's own marketing artwork terms.
