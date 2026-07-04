@@ -1,0 +1,246 @@
+{
+  "format": "iphone",
+  "brand": {
+    "logo": null,
+    "appName": "Vault",
+    "colors": [
+      "#b9a5ff"
+    ],
+    "accent": "#b9a5ff",
+    "bezel": "black",
+    "clayColor": "#9b8cff"
+  },
+  "screens": [
+    {
+      "bg": {
+        "type": "gradient",
+        "value": "radial-gradient(120% 90% at 22% 85%, #38205f 0%, #170d2a 48%, #0b0714 100%)",
+        "pattern": "none",
+        "image": null
+      },
+      "layers": [
+        {
+          "id": "s1_h",
+          "type": "text",
+          "cx": 180,
+          "cy": 110,
+          "scale": 1,
+          "rot": 0,
+          "text": "Private by *default*",
+          "font": "'Space Grotesk', sans-serif",
+          "fontSize": 48,
+          "weight": 700,
+          "color": "#ffffff",
+          "align": "center",
+          "width": 310,
+          "lineHeight": 1.05,
+          "accent": "#b9a5ff",
+          "scrim": "none"
+        },
+        {
+          "id": "s1_r",
+          "type": "rating",
+          "cx": 180,
+          "cy": 200,
+          "scale": 1,
+          "rot": 0,
+          "stars": 5,
+          "value": "4.9 · 12k ratings",
+          "showValue": true,
+          "color": "#ffc53d",
+          "textColor": "#ffffff"
+        },
+        {
+          "id": "s1_s",
+          "type": "text",
+          "cx": 180,
+          "cy": 246,
+          "scale": 1,
+          "rot": 0,
+          "text": "Messages that answer to you, not a server.",
+          "font": "'Manrope', sans-serif",
+          "fontSize": 17,
+          "weight": 500,
+          "color": "rgba(255,255,255,.72)",
+          "align": "center",
+          "width": 300,
+          "lineHeight": 1.3,
+          "accent": "#b9a5ff",
+          "scrim": "none"
+        },
+        {
+          "id": "s1_d",
+          "type": "device",
+          "cx": 180,
+          "cy": 560,
+          "scale": 0.95,
+          "rot": 0,
+          "kind": "phone",
+          "os": "ios",
+          "orientation": "portrait",
+          "notch": "auto",
+          "rx3d": 0,
+          "ry3d": 0,
+          "bezel": "black",
+          "treatment": "plain",
+          "image": null,
+          "showStatus": true,
+          "statusDark": true,
+          "accent": "#b9a5ff"
+        }
+      ]
+    },
+    {
+      "bg": {
+        "type": "gradient",
+        "value": "radial-gradient(120% 90% at 78% 15%, #2c1a4e 0%, #150c26 52%, #0b0714 100%)",
+        "pattern": "none",
+        "image": null
+      },
+      "layers": [
+        {
+          "id": "s2_h",
+          "type": "text",
+          "cx": 180,
+          "cy": 86,
+          "scale": 1,
+          "rot": 0,
+          "text": "No number. No *trail*.",
+          "font": "'Space Grotesk', sans-serif",
+          "fontSize": 30,
+          "weight": 700,
+          "color": "#ffffff",
+          "align": "center",
+          "width": 310,
+          "lineHeight": 1.1,
+          "accent": "#b9a5ff",
+          "scrim": "none"
+        },
+        {
+          "id": "s2_s",
+          "type": "text",
+          "cx": 180,
+          "cy": 146,
+          "scale": 1,
+          "rot": 0,
+          "text": "Sign up with a screen name and a PIN.",
+          "font": "'Manrope', sans-serif",
+          "fontSize": 17,
+          "weight": 500,
+          "color": "rgba(255,255,255,.72)",
+          "align": "center",
+          "width": 300,
+          "lineHeight": 1.3,
+          "accent": "#b9a5ff",
+          "scrim": "none"
+        },
+        {
+          "id": "s2_d1",
+          "type": "device",
+          "cx": 120,
+          "cy": 560,
+          "scale": 0.78,
+          "rot": -8,
+          "kind": "phone",
+          "os": "ios",
+          "orientation": "portrait",
+          "notch": "auto",
+          "rx3d": 8,
+          "ry3d": -16,
+          "bezel": "black",
+          "treatment": "plain",
+          "image": null,
+          "showStatus": true,
+          "statusDark": true,
+          "accent": "#b9a5ff"
+        },
+        {
+          "id": "s2_d2",
+          "type": "device",
+          "cx": 244,
+          "cy": 520,
+          "scale": 0.84,
+          "rot": 6,
+          "kind": "phone",
+          "os": "ios",
+          "orientation": "portrait",
+          "notch": "auto",
+          "rx3d": 5,
+          "ry3d": 14,
+          "bezel": "black",
+          "treatment": "plain",
+          "image": null,
+          "showStatus": true,
+          "statusDark": true,
+          "accent": "#b9a5ff"
+        }
+      ]
+    },
+    {
+      "bg": {
+        "type": "gradient",
+        "value": "radial-gradient(130% 100% at 50% 110%, #3a2266 0%, #1a0f30 55%, #0b0714 100%)",
+        "pattern": "none",
+        "image": null
+      },
+      "layers": [
+        {
+          "id": "s3_h",
+          "type": "text",
+          "cx": 180,
+          "cy": 86,
+          "scale": 1,
+          "rot": 0,
+          "text": "On every *screen*",
+          "font": "'Space Grotesk', sans-serif",
+          "fontSize": 30,
+          "weight": 700,
+          "color": "#ffffff",
+          "align": "center",
+          "width": 310,
+          "lineHeight": 1.1,
+          "accent": "#b9a5ff",
+          "scrim": "none"
+        },
+        {
+          "id": "s3_s",
+          "type": "text",
+          "cx": 180,
+          "cy": 146,
+          "scale": 1,
+          "rot": 0,
+          "text": "Phone and desktop, one encrypted vault.",
+          "font": "'Manrope', sans-serif",
+          "fontSize": 17,
+          "weight": 500,
+          "color": "rgba(255,255,255,.72)",
+          "align": "center",
+          "width": 300,
+          "lineHeight": 1.3,
+          "accent": "#b9a5ff",
+          "scrim": "none"
+        },
+        {
+          "id": "s3_d",
+          "type": "device",
+          "cx": 180,
+          "cy": 545,
+          "scale": 1.12,
+          "rot": 0,
+          "kind": "phone",
+          "os": "ios",
+          "orientation": "portrait",
+          "notch": "auto",
+          "rx3d": 0,
+          "ry3d": 0,
+          "bezel": "black",
+          "treatment": "duo",
+          "image": null,
+          "showStatus": true,
+          "statusDark": false,
+          "accent": "#b9a5ff"
+        }
+      ]
+    }
+  ]
+}
