@@ -1,0 +1,13 @@
+{
+  "name": "shotpress",
+  "owner": {
+    "name": "Ibrahim Hajjaj"
+  },
+  "plugins": [
+    {
+      "name": "shotpress",
+      "source": "./",
+      "description": "Compose, lint, and render App Store / Google Play screenshot sets from JSON — with live-app and simulator capture, RTL mirroring, A/B variants, and fastlane-ready output"
+    }
+  ]
+}
