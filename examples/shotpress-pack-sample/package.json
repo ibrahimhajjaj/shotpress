@@ -1,0 +1,9 @@
+{
+  "name": "shotpress-pack-sample",
+  "version": "0.1.0",
+  "description": "Example community pack for shotpress — copy this layout to publish your own",
+  "license": "MIT",
+  "files": [
+    "pack.json"
+  ]
+}
