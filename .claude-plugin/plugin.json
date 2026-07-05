@@ -1,13 +1,13 @@
 {
   "name": "shotpress",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "description": "Generate App Store / Google Play screenshot sets: framed device mockups on styled backgrounds with headlines, ratings and badges, rendered at exact store pixel sizes",
   "author": {
     "name": "Ibrahim Hajjaj",
     "url": "https://github.com/ibrahimhajjaj"
   },
   "repository": "https://github.com/ibrahimhajjaj/shotpress",
-  "license": "MIT",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "keywords": [
     "screenshots",
     "app-store",
