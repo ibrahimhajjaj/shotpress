@@ -18,7 +18,7 @@
       },
       "layers": [
         {
-          "id": "ld1dcmc",
+          "id": "lat5387",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -37,7 +37,7 @@
           "rot": 0
         },
         {
-          "id": "lkl2it4",
+          "id": "lrih1gn",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -55,7 +55,7 @@
           "cy": 85.8
         },
         {
-          "id": "lqdyjac",
+          "id": "ljblyly",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -73,7 +73,7 @@
           "cy": 191.1
         },
         {
-          "id": "lv00i2a",
+          "id": "l8zbsix",
           "type": "rating",
           "stars": 5,
           "value": "4.9 · 40k ratings",
@@ -83,7 +83,8 @@
           "cx": 180,
           "cy": 245.7,
           "scale": 1,
-          "rot": 0
+          "rot": 0,
+          "placeholder": true
         }
       ]
     },
@@ -96,7 +97,7 @@
       },
       "layers": [
         {
-          "id": "l1h5mb7",
+          "id": "lkz51c2",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -114,7 +115,7 @@
           "cy": 85.8
         },
         {
-          "id": "ll1mjmy",
+          "id": "lc5lpuv",
           "type": "feature",
           "glyph": "✦",
           "title": "Auto-categories",
@@ -132,7 +133,7 @@
           "rot": 0
         },
         {
-          "id": "ls2n51d",
+          "id": "lkrfwx6",
           "type": "feature",
           "glyph": "◉",
           "title": "Live balance",
@@ -150,7 +151,7 @@
           "rot": 0
         },
         {
-          "id": "ltoco6d",
+          "id": "lowkf2l",
           "type": "feature",
           "glyph": "❖",
           "title": "Insights",
@@ -168,7 +169,7 @@
           "rot": 0
         },
         {
-          "id": "lspczcd",
+          "id": "llej2eq",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -197,7 +198,7 @@
       },
       "layers": [
         {
-          "id": "l20rc2x",
+          "id": "l8kok5k",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -215,7 +216,7 @@
           "cy": 124.8
         },
         {
-          "id": "l16jqk7",
+          "id": "lbgsyoi",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -233,7 +234,7 @@
           "cy": 218.40000000000003
         },
         {
-          "id": "lv8x9in",
+          "id": "l23j70l",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -262,7 +263,7 @@
       },
       "layers": [
         {
-          "id": "lg4sx7g",
+          "id": "lxyfnuw",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -281,7 +282,7 @@
           "rot": 0
         },
         {
-          "id": "lp4b4dp",
+          "id": "l9yc7rl",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -309,7 +310,7 @@
       },
       "layers": [
         {
-          "id": "l45g9u2",
+          "id": "lstfk4y",
           "type": "text",
           "font": "'Instrument Serif', serif",
           "weight": 400,
@@ -324,10 +325,11 @@
           "rot": 0,
           "text": "“I finally feel in control of my money.”",
           "fontSize": 33,
-          "cy": 124.8
+          "cy": 124.8,
+          "placeholder": true
         },
         {
-          "id": "lwn0vgy",
+          "id": "llqtwht",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -342,10 +344,11 @@
           "rot": 0,
           "fontSize": 17,
           "text": "— Priya S., ★★★★★",
-          "cy": 241.8
+          "cy": 241.8,
+          "placeholder": true
         },
         {
-          "id": "l4rwn1r",
+          "id": "lyli8m0",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -374,7 +377,7 @@
       },
       "layers": [
         {
-          "id": "l593zg0",
+          "id": "lj2nzr9",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -392,7 +395,7 @@
           "cy": 85.8
         },
         {
-          "id": "ldu9vx0",
+          "id": "ldfcbjy",
           "type": "feature",
           "glyph": "◆",
           "title": "Goals",
@@ -410,7 +413,7 @@
           "rot": 0
         },
         {
-          "id": "lkj6jq2",
+          "id": "lgtkbw9",
           "type": "feature",
           "glyph": "▲",
           "title": "Investing",
@@ -428,7 +431,7 @@
           "rot": 0
         },
         {
-          "id": "lwgowrm",
+          "id": "lnc8hvw",
           "type": "feature",
           "glyph": "★",
           "title": "Security",
@@ -446,7 +449,7 @@
           "rot": 0
         },
         {
-          "id": "l0kz7su",
+          "id": "ll4wfd0",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -475,7 +478,7 @@
       },
       "layers": [
         {
-          "id": "lqhpfqh",
+          "id": "lms7ivo",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -494,7 +497,7 @@
           "rot": 0
         },
         {
-          "id": "lf3p2w0",
+          "id": "lpe8ej1",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -512,7 +515,7 @@
           "cy": 109.20000000000002
         },
         {
-          "id": "l8undho",
+          "id": "lvjttu4",
           "type": "feature",
           "glyph": "✓",
           "title": "Protected",
@@ -540,7 +543,7 @@
       },
       "layers": [
         {
-          "id": "l4fh0g2",
+          "id": "lbyviuc",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -558,7 +561,7 @@
           "cy": 124.8
         },
         {
-          "id": "lcrspei",
+          "id": "lss8k47",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -576,7 +579,7 @@
           "cy": 218.40000000000003
         },
         {
-          "id": "lzch5gq",
+          "id": "llw1n2o",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -605,7 +608,7 @@
       },
       "layers": [
         {
-          "id": "l9v33p6",
+          "id": "lyyesdh",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -624,7 +627,7 @@
           "rot": 0
         },
         {
-          "id": "l52rp4l",
+          "id": "l6kua7y",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -652,7 +655,7 @@
       },
       "layers": [
         {
-          "id": "l6ff1vt",
+          "id": "lwiieb2",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -670,7 +673,7 @@
           "cy": 265.20000000000005
         },
         {
-          "id": "lfbcs11",
+          "id": "lzb5u1i",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -688,7 +691,7 @@
           "cy": 366.59999999999997
         },
         {
-          "id": "lbscs9z",
+          "id": "le8o6ax",
           "type": "badge",
           "variant": "pill",
           "text": "Get started",

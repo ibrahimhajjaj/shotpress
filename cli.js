@@ -11,7 +11,8 @@ import { discoverExternalPacks, loadPackFile } from './src/external-packs.js';
 import { fastlanePath } from './src/fastlane.js';
 import { installFrames, listFrames, APPLE_BEZELS, APPLE_TERMS_URL } from './src/frames.js';
 import { zipFiles, zipName } from './src/zip.js';
-import { lintProject } from './src/lint.js';
+import { lintProject, sketchProject } from './src/lint.js';
+import { parseMasks } from './src/imgedit.js';
 import { captureRoutes } from './src/capture.js';
 import { simShot } from './src/simshot.js';
 import { emitVariants } from './src/variants.js';
@@ -77,11 +78,15 @@ simshot options:
   --flow <file>       run a Maestro flow first; collect its takeScreenshot pngs
   --video             record video instead (with --flow: records the driven session)
   --duration <s>      video length without a flow (default 20, max 120)
+  --crop-top <px>     trim capture tops (status quirks); still captures only
+  --crop-bottom <px>  trim capture bottoms (nav bars, dev overlays)
+  --mask x,y,w,h      fill a rect with its surrounding color; repeatable
   --name <str>        output filename without extension (default "sim"/"preview")
   --out <dir>         default ./shotpress-captures
   --json              print a JSON manifest
 
 lint options:
+  --sketch            print an ascii map of layer positions per screen
   --strict            non-zero exit when findings exist
   --json              findings as JSON
 
@@ -153,6 +158,10 @@ function parseUnsafe(argv, extra = {}) {
       dmg: { type: 'string' },
       video: { type: 'boolean', default: false },
       duration: { type: 'string', default: '20' },
+      'crop-top': { type: 'string', default: '0' },
+      'crop-bottom': { type: 'string', default: '0' },
+      mask: { type: 'string', multiple: true },
+      sketch: { type: 'boolean', default: false },
       help: { type: 'boolean', default: false },
       ...extra,
     },
@@ -338,6 +347,9 @@ async function cmdNew(argv) {
   const json = JSON.stringify(project, null, 2) + '\n';
   if (v.out) { await writeFile(v.out, json); process.stderr.write(`wrote ${v.out}\n`); }
   else process.stdout.write(json);
+  if (JSON.stringify(project).includes('"placeholder":true')) {
+    process.stderr.write('note: pack copy includes demo ratings/quotes marked "placeholder" — lint flags them until you replace the content and drop the flag\n');
+  }
 }
 
 async function cmdValidate(argv) {
@@ -352,6 +364,7 @@ async function cmdLint(argv) {
   const { values: v, positionals } = parse(argv);
   const project = await loadProject(positionals[0]);
   const result = lintProject(project);
+  if (v.sketch) process.stdout.write(sketchProject(project) + '\n\n');
   if (v.json) process.stdout.write(JSON.stringify(result, null, 2) + '\n');
   else if (!result.count) process.stdout.write('no findings\n');
   else for (const f of result.findings) {
@@ -475,6 +488,13 @@ try {
       if (v.video && (!Number.isInteger(duration) || duration < 1 || duration > 120)) {
         fail(`--duration must be an integer between 1 and 120 seconds (got "${v.duration}")`, 2);
       }
+      const crops = {};
+      for (const key of ['crop-top', 'crop-bottom']) {
+        const n = Number(v[key]);
+        if (!Number.isInteger(n) || n < 0) fail(`--${key} must be a non-negative integer (got "${v[key]}")`, 2);
+        crops[key === 'crop-top' ? 'cropTop' : 'cropBottom'] = n;
+      }
+      const masks = parseMasks(v.mask || []);
       const result = await simShot({
         platform: positionals[0],
         device: v.device || null,
@@ -483,6 +503,8 @@ try {
         flow: v.flow || null,
         video: v.video,
         duration,
+        clean: { ...crops, masks },
+        browserPath: browserPathOf(v),
       });
       if (v.json) process.stdout.write(JSON.stringify(result, null, 2) + '\n');
       else result.files.forEach(f => process.stdout.write(f.path + '\n'));

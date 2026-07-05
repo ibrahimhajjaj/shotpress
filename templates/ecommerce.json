@@ -18,7 +18,7 @@
       },
       "layers": [
         {
-          "id": "l2jjvwk",
+          "id": "lnyd2xc",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -37,7 +37,7 @@
           "rot": 0
         },
         {
-          "id": "lpo50j2",
+          "id": "lzlbo3h",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -55,7 +55,7 @@
           "cy": 85.8
         },
         {
-          "id": "lnzupxd",
+          "id": "lyyr5op",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -73,7 +73,7 @@
           "cy": 191.1
         },
         {
-          "id": "lgk7oen",
+          "id": "lgws0cv",
           "type": "rating",
           "stars": 5,
           "value": "4.8 · 54k ratings",
@@ -83,7 +83,8 @@
           "cx": 180,
           "cy": 245.7,
           "scale": 1,
-          "rot": 0
+          "rot": 0,
+          "placeholder": true
         }
       ]
     },
@@ -96,7 +97,7 @@
       },
       "layers": [
         {
-          "id": "l7baucw",
+          "id": "l3e09nr",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -114,7 +115,7 @@
           "cy": 85.8
         },
         {
-          "id": "lyivozh",
+          "id": "lj0m8r8",
           "type": "feature",
           "glyph": "✦",
           "title": "Curated",
@@ -132,7 +133,7 @@
           "rot": 0
         },
         {
-          "id": "l3b5943",
+          "id": "l3xkm7w",
           "type": "feature",
           "glyph": "◉",
           "title": "Fast shipping",
@@ -150,7 +151,7 @@
           "rot": 0
         },
         {
-          "id": "l0i8d9v",
+          "id": "lcyntl7",
           "type": "feature",
           "glyph": "♥",
           "title": "Wishlists",
@@ -168,7 +169,7 @@
           "rot": 0
         },
         {
-          "id": "lagrw36",
+          "id": "l4vv2fy",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -197,7 +198,7 @@
       },
       "layers": [
         {
-          "id": "l0567wu",
+          "id": "lehon36",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -215,7 +216,7 @@
           "cy": 124.8
         },
         {
-          "id": "lsksksu",
+          "id": "lzt3qnt",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -233,7 +234,7 @@
           "cy": 218.40000000000003
         },
         {
-          "id": "lah424w",
+          "id": "l4ipz5b",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -262,7 +263,7 @@
       },
       "layers": [
         {
-          "id": "l6nybl0",
+          "id": "l6y7yqq",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -281,7 +282,7 @@
           "rot": 0
         },
         {
-          "id": "lat4lpu",
+          "id": "l6j3zhs",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -309,7 +310,7 @@
       },
       "layers": [
         {
-          "id": "lvf59us",
+          "id": "lumbta5",
           "type": "text",
           "font": "'Instrument Serif', serif",
           "weight": 400,
@@ -324,10 +325,11 @@
           "rot": 0,
           "text": "“My go-to app for everything.”",
           "fontSize": 33,
-          "cy": 124.8
+          "cy": 124.8,
+          "placeholder": true
         },
         {
-          "id": "ly0q1zm",
+          "id": "lhku5vg",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -342,10 +344,11 @@
           "rot": 0,
           "fontSize": 17,
           "text": "— Mia T., ★★★★★",
-          "cy": 241.8
+          "cy": 241.8,
+          "placeholder": true
         },
         {
-          "id": "lfljxse",
+          "id": "lz0vxen",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -374,7 +377,7 @@
       },
       "layers": [
         {
-          "id": "laqa8t0",
+          "id": "lhxi8d4",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -392,7 +395,7 @@
           "cy": 85.8
         },
         {
-          "id": "l2d6s5u",
+          "id": "l9qxi0k",
           "type": "feature",
           "glyph": "◆",
           "title": "Secure pay",
@@ -410,7 +413,7 @@
           "rot": 0
         },
         {
-          "id": "lk9a0y4",
+          "id": "lr7ynu4",
           "type": "feature",
           "glyph": "▲",
           "title": "Deals",
@@ -428,7 +431,7 @@
           "rot": 0
         },
         {
-          "id": "lsy3fx9",
+          "id": "lmp4vlr",
           "type": "feature",
           "glyph": "★",
           "title": "Tracking",
@@ -446,7 +449,7 @@
           "rot": 0
         },
         {
-          "id": "lk2hvyi",
+          "id": "lbssin2",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -475,7 +478,7 @@
       },
       "layers": [
         {
-          "id": "ld34gcw",
+          "id": "l5xxilp",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -494,7 +497,7 @@
           "rot": 0
         },
         {
-          "id": "l0evswa",
+          "id": "lxrzzf2",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -512,7 +515,7 @@
           "cy": 109.20000000000002
         },
         {
-          "id": "l8ed9gw",
+          "id": "law4v37",
           "type": "feature",
           "glyph": "✓",
           "title": "Easy returns",
@@ -540,7 +543,7 @@
       },
       "layers": [
         {
-          "id": "ljsg154",
+          "id": "l6uw2i4",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -559,7 +562,7 @@
           "rot": 0
         },
         {
-          "id": "ll9c9kq",
+          "id": "latwj7b",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -587,7 +590,7 @@
       },
       "layers": [
         {
-          "id": "l9vh996",
+          "id": "lmxeg7e",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -606,7 +609,7 @@
           "rot": 0
         },
         {
-          "id": "l14bz2o",
+          "id": "l59sw2s",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -634,7 +637,7 @@
       },
       "layers": [
         {
-          "id": "l4tul1m",
+          "id": "le0q692",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -652,7 +655,7 @@
           "cy": 265.20000000000005
         },
         {
-          "id": "ltmz1z8",
+          "id": "liizbe2",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -670,7 +673,7 @@
           "cy": 366.59999999999997
         },
         {
-          "id": "laea4qa",
+          "id": "lu1blno",
           "type": "badge",
           "variant": "pill",
           "text": "Start shopping",

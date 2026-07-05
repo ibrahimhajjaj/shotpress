@@ -18,7 +18,7 @@
       },
       "layers": [
         {
-          "id": "ln1c2ge",
+          "id": "lbwasxy",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -37,7 +37,7 @@
           "rot": 0
         },
         {
-          "id": "l2s041i",
+          "id": "lv1n8av",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -55,7 +55,7 @@
           "cy": 85.8
         },
         {
-          "id": "l2hfw7w",
+          "id": "l0zi801",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -73,7 +73,7 @@
           "cy": 191.1
         },
         {
-          "id": "ldq81qy",
+          "id": "l6ps176",
           "type": "rating",
           "stars": 5,
           "value": "4.9 · 96k ratings",
@@ -83,7 +83,8 @@
           "cx": 180,
           "cy": 245.7,
           "scale": 1,
-          "rot": 0
+          "rot": 0,
+          "placeholder": true
         }
       ]
     },
@@ -96,7 +97,7 @@
       },
       "layers": [
         {
-          "id": "lhzyqcz",
+          "id": "l0odp0k",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -114,7 +115,7 @@
           "cy": 85.8
         },
         {
-          "id": "lxkhips",
+          "id": "l1hfkhz",
           "type": "feature",
           "glyph": "✦",
           "title": "Instant answers",
@@ -132,7 +133,7 @@
           "rot": 0
         },
         {
-          "id": "l238c3c",
+          "id": "l3vpz7q",
           "type": "feature",
           "glyph": "◉",
           "title": "Drafts",
@@ -150,7 +151,7 @@
           "rot": 0
         },
         {
-          "id": "lm90gd0",
+          "id": "lpp3wod",
           "type": "feature",
           "glyph": "❖",
           "title": "Memory",
@@ -168,7 +169,7 @@
           "rot": 0
         },
         {
-          "id": "lsb8tpd",
+          "id": "lr0w7hq",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -197,7 +198,7 @@
       },
       "layers": [
         {
-          "id": "lufqcho",
+          "id": "l2blr01",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -215,7 +216,7 @@
           "cy": 124.8
         },
         {
-          "id": "l002h41",
+          "id": "l0p3r5j",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -233,7 +234,7 @@
           "cy": 218.40000000000003
         },
         {
-          "id": "l9icxtb",
+          "id": "lbtfpga",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -262,7 +263,7 @@
       },
       "layers": [
         {
-          "id": "lcrtv0j",
+          "id": "lp1fz57",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -281,7 +282,7 @@
           "rot": 0
         },
         {
-          "id": "lbu6tx6",
+          "id": "lvp4t5e",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -309,7 +310,7 @@
       },
       "layers": [
         {
-          "id": "lmvlwit",
+          "id": "lso264c",
           "type": "text",
           "font": "'Instrument Serif', serif",
           "weight": 400,
@@ -324,10 +325,11 @@
           "rot": 0,
           "text": "“It’s like having a genius on call.”",
           "fontSize": 33,
-          "cy": 124.8
+          "cy": 124.8,
+          "placeholder": true
         },
         {
-          "id": "l4tdvmk",
+          "id": "ls1tqum",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -342,10 +344,11 @@
           "rot": 0,
           "fontSize": 17,
           "text": "— Ravi N., ★★★★★",
-          "cy": 241.8
+          "cy": 241.8,
+          "placeholder": true
         },
         {
-          "id": "l0u8iam",
+          "id": "loj0b2w",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -374,7 +377,7 @@
       },
       "layers": [
         {
-          "id": "l50lu5b",
+          "id": "l8xcomg",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -392,7 +395,7 @@
           "cy": 85.8
         },
         {
-          "id": "lshgul8",
+          "id": "lw0fqew",
           "type": "feature",
           "glyph": "◆",
           "title": "Summaries",
@@ -410,7 +413,7 @@
           "rot": 0
         },
         {
-          "id": "lx5g05p",
+          "id": "l9gxywb",
           "type": "feature",
           "glyph": "▲",
           "title": "Ideas",
@@ -428,7 +431,7 @@
           "rot": 0
         },
         {
-          "id": "lmjha29",
+          "id": "l284b2q",
           "type": "feature",
           "glyph": "★",
           "title": "Private",
@@ -446,7 +449,7 @@
           "rot": 0
         },
         {
-          "id": "l2a8evq",
+          "id": "l9r9a5d",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -475,7 +478,7 @@
       },
       "layers": [
         {
-          "id": "l4391s7",
+          "id": "lzmqiv9",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -494,7 +497,7 @@
           "rot": 0
         },
         {
-          "id": "ldzsiwb",
+          "id": "ldlvx59",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -512,7 +515,7 @@
           "cy": 109.20000000000002
         },
         {
-          "id": "lfv6u37",
+          "id": "lx1l4zg",
           "type": "feature",
           "glyph": "✓",
           "title": "Context aware",
@@ -540,7 +543,7 @@
       },
       "layers": [
         {
-          "id": "l9o5n3d",
+          "id": "lwzhwij",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -558,7 +561,7 @@
           "cy": 124.8
         },
         {
-          "id": "lgt4h3n",
+          "id": "lpwhm3d",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -576,7 +579,7 @@
           "cy": 218.40000000000003
         },
         {
-          "id": "lw3rw9m",
+          "id": "lh8angp",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -605,7 +608,7 @@
       },
       "layers": [
         {
-          "id": "lklfri9",
+          "id": "lv1lmlk",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -624,7 +627,7 @@
           "rot": 0
         },
         {
-          "id": "l61rqth",
+          "id": "l51rlmr",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -652,7 +655,7 @@
       },
       "layers": [
         {
-          "id": "lw2vm87",
+          "id": "lxn06w4",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -670,7 +673,7 @@
           "cy": 265.20000000000005
         },
         {
-          "id": "lxm26x3",
+          "id": "l4mfj5v",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -688,7 +691,7 @@
           "cy": 366.59999999999997
         },
         {
-          "id": "l211wjq",
+          "id": "ljzncb3",
           "type": "badge",
           "variant": "pill",
           "text": "Get Nova",

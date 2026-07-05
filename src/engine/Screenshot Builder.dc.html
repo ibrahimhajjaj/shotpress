@@ -1670,7 +1670,7 @@ class Component extends DCLogic {
     const dev=(treat,cx,cy,scale)=>({id:this.uid(),type:'device',kind:f.kind,os:f.os,orientation:'portrait',showStatus:false,statusDark:false,image:null,beforeImage:null,treatment:treat,bezel:br.bezel||'black',showVideo:false,accent:'#ffffff',cx,cy,scale,rot:0});
     const txt=(o)=>Object.assign({id:this.uid(),type:'text',font:"'Space Grotesk', sans-serif",weight:700,color:'#ffffff',align:'center',accent:'#ffffff',scrim:'none',lineHeight:1.05,scale:1,rot:0},o);
     const feat=(glyph,title,sub,cx,cy)=>({id:this.uid(),type:'feature',glyph,title,sub,iconColor:'#ffffff',iconBg:A,bgShape:'round',titleColor:'#ffffff',subColor:'rgba(255,255,255,.72)',font:"'Manrope', sans-serif",w0:Math.round(W*0.74),cx,cy,scale:1,rot:0});
-    const rating=(cy)=>({id:this.uid(),type:'rating',stars:5,value:'4.9 · 12k ratings',showValue:true,color:'#ffc53d',textColor:'#ffffff',cx:W/2,cy,scale:1,rot:0});
+    const rating=(cy)=>({id:this.uid(),type:'rating',stars:5,value:'4.9 · 12k ratings',showValue:true,color:'#ffc53d',textColor:'#ffffff',cx:W/2,cy,scale:1,rot:0,placeholder:true});
     let layers=[];
     if(k==='hero'){
       layers=[ dev('plain',W/2,H*0.68,(H*0.5)/462), txt({text:'Your day, **organized**',fontSize:Math.round(W*0.094),width:Math.round(W*0.82),cx:W/2,cy:H*0.11}), txt({text:'Plan, track and ship — all in one calm place.',font:"'Manrope', sans-serif",weight:500,fontSize:Math.round(W*0.047),width:Math.round(W*0.74),lineHeight:1.4,cx:W/2,cy:H*0.245}), rating(H*0.315) ];
@@ -1825,14 +1825,14 @@ class Component extends DCLogic {
     const T=(o)=>Object.assign({id:uid(),type:'text',font:"'Space Grotesk', sans-serif",weight:700,color:th.textOn,align:'center',accent:th.accent,scrim:'none',lineHeight:1.05,width:Math.round(W*0.84),cx:W/2,scale:1,rot:0},o);
     const S=(o)=>T(Object.assign({font:"'Manrope', sans-serif",weight:500,fontSize:Math.round(W*0.047),color:th.subOn,width:Math.round(W*0.74),lineHeight:1.4},o));
     const feat=(g,ti,su,cx,cy,w)=>({id:uid(),type:'feature',glyph:g,title:ti,sub:su,iconColor:'#ffffff',iconBg:th.chip,bgShape:'round',titleColor:th.textOn,subColor:th.subOn,font:"'Manrope', sans-serif",w0:Math.round(w||W*0.74),cx,cy,scale:1,rot:0});
-    const rating=(cy,val)=>({id:uid(),type:'rating',stars:5,value:val||'4.9',showValue:true,color:'#ffc53d',textColor:th.textOn,cx:W/2,cy,scale:1,rot:0});
+    const rating=(cy,val)=>({id:uid(),type:'rating',stars:5,value:val||'4.9',showValue:true,color:'#ffc53d',textColor:th.textOn,cx:W/2,cy,scale:1,rot:0,placeholder:true});
     const badge=(txt,cy)=>({id:uid(),type:'badge',variant:'pill',text:txt||'Download',accent:th.chip,cx:W/2,cy,scale:1,rot:0});
     const build={
       hero:(c)=>[dev('plain',W/2,H*0.68,0.5),T({text:c.h,fontSize:Math.round(W*0.092),cy:H*0.11,width:Math.round(W*0.82)}),S({text:c.s,cy:H*0.245}),rating(H*0.315,c.rate)],
       feat3:(c)=>[T({text:c.h,fontSize:Math.round(W*0.078),cy:H*0.11,width:Math.round(W*0.86)}),feat(c.feats[0][0],c.feats[0][1],c.feats[0][2],W/2,H*0.24),feat(c.feats[1][0],c.feats[1][1],c.feats[1][2],W/2,H*0.335),feat(c.feats[2][0],c.feats[2][1],c.feats[2][2],W/2,H*0.43),dev('plain',W/2,H*0.76,0.4)],
       show:(c)=>[dev('bleed',W/2,H/2,(H/base)*0.98),T({text:c.h,fontSize:Math.round(W*0.092),cy:H*0.14,width:Math.round(W*0.84),scrim:'blur'})],
       stat:(c)=>[T({text:c.stat,fontSize:Math.round(W*0.19),cy:H*0.16,width:Math.round(W*0.9),color:th.accent}),S({text:c.statl,weight:600,color:th.textOn,cy:H*0.28,width:Math.round(W*0.72)}),dev('multi',W/2,H*0.73,0.4)],
-      quote:(c)=>[T({text:'“'+c.q+'”',font:"'Instrument Serif', serif",weight:400,fontSize:Math.round(W*0.092),cy:H*0.16,width:Math.round(W*0.86),lineHeight:1.12}),S({text:c.by,weight:600,cy:H*0.31,width:Math.round(W*0.72)}),dev('multi',W/2,H*0.74,0.4)],
+      quote:(c)=>[T({text:'“'+c.q+'”',font:"'Instrument Serif', serif",weight:400,fontSize:Math.round(W*0.092),cy:H*0.16,width:Math.round(W*0.86),lineHeight:1.12,placeholder:true}),S({text:c.by,weight:600,cy:H*0.31,width:Math.round(W*0.72),placeholder:true}),dev('multi',W/2,H*0.74,0.4)],
       angled:(c)=>[dev('angled',W*0.62,H*0.66,0.5),T({text:c.h,fontSize:Math.round(W*0.078),cy:H*0.14,width:Math.round(W*0.58),align:'left',cx:W*0.35}),feat(c.feat[0],c.feat[1],c.feat[2],W*0.35,H*0.32,W*0.52)],
       min:(c)=>[dev('plain',W/2,H*0.62,0.56),T({text:c.h,fontSize:Math.round(W*0.092),cy:H*0.14,width:Math.round(W*0.84)})],
       lead:(c)=>[dev('plain',W/2,H*0.66,0.52),T({text:c.h,fontSize:Math.round(W*0.078),cy:H*0.11,width:Math.round(W*0.86)}),S({text:c.s,cy:H*0.235})],

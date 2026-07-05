@@ -61,10 +61,56 @@ function textBox(l) {
   return { top: l.cy - h / 2, bottom: l.cy + h / 2, left: l.cx - w / 2, right: l.cx + w / 2 };
 }
 
+const DEVICE_BASE_W = {
+  phone: { portrait: 226, landscape: 470 },
+  tablet: { portrait: 366, landscape: 486 },
+  mac: { portrait: 660, landscape: 660 },
+  watch: { portrait: 158, landscape: 158 },
+};
+
 function deviceBox(l, fmt) {
-  const baseH = (DEVICE_BASE_H[l.kind] || DEVICE_BASE_H.phone)[l.orientation === 'landscape' ? 'landscape' : 'portrait'];
-  const h = baseH * (l.scale || 1);
-  return { top: l.cy - h / 2, bottom: l.cy + h / 2 };
+  const orient = l.orientation === 'landscape' ? 'landscape' : 'portrait';
+  const h = (DEVICE_BASE_H[l.kind] || DEVICE_BASE_H.phone)[orient] * (l.scale || 1);
+  const w = (DEVICE_BASE_W[l.kind] || DEVICE_BASE_W.phone)[orient] * (l.scale || 1);
+  return { top: l.cy - h / 2, bottom: l.cy + h / 2, left: l.cx - w / 2, right: l.cx + w / 2 };
+}
+
+const SKETCH_MARK = { text: 'T', device: 'D', rating: 'R', badge: 'B', callout: 'C', feature: 'F', image: 'I', logo: 'L', shape: 'S', icon: 'i' };
+
+// ASCII map of layer boxes per screen, so positions can be sanity-checked
+// before the first render. Overlaps show as *; the store-UI bands as ~.
+export function sketchProject(project) {
+  const fmt = FORMATS[project.format] || FORMATS.iphone;
+  const cols = 26;
+  const rows = Math.max(12, Math.round((cols * fmt.h / fmt.w) / 2.1));
+  const sx = (x) => Math.max(0, Math.min(cols - 1, Math.floor((x / fmt.w) * cols)));
+  const sy = (y) => Math.max(0, Math.min(rows - 1, Math.floor((y / fmt.h) * rows)));
+  const lines = [];
+  for (const [i, screen] of (project.screens || []).entries()) {
+    const grid = Array.from({ length: rows }, () => Array(cols).fill(' '));
+    const bandTop = sy(fmt.h * 0.06), bandBottom = sy(fmt.h * 0.96);
+    for (let c = 0; c < cols; c++) {
+      for (let r = 0; r <= bandTop; r++) grid[r][c] = '~';
+      for (let r = bandBottom; r < rows; r++) grid[r][c] = '~';
+    }
+    for (const l of screen.layers || []) {
+      if (l.hidden) continue;
+      const box = l.type === 'device' ? deviceBox(l, fmt) : l.type === 'text' ? textBox(l)
+        : { top: l.cy - 14, bottom: l.cy + 14, left: l.cx - 60, right: l.cx + 60 };
+      const ch = SKETCH_MARK[l.type] || '?';
+      for (let r = sy(box.top); r <= sy(box.bottom); r++) {
+        for (let c = sx(box.left); c <= sx(box.right); c++) {
+          grid[r][c] = grid[r][c] === ' ' || grid[r][c] === '~' ? ch : '*';
+        }
+      }
+    }
+    lines.push(`screen ${i + 1}  (${fmt.w}×${fmt.h} design px)`);
+    lines.push('┌' + '─'.repeat(cols) + '┐');
+    for (const row of grid) lines.push('│' + row.join('') + '│');
+    lines.push('└' + '─'.repeat(cols) + '┘');
+  }
+  lines.push('T text  D device  R rating  B badge  C callout  F feature  * overlap  ~ store-UI band');
+  return lines.join('\n');
 }
 
 export function lintProject(project) {
@@ -185,6 +231,23 @@ export function lintProject(project) {
       if (d > 0 && d <= 8) {
         add('ALIGNMENT_DRIFT', i + 1, `headline anchor drifts ${d}px from the previous screen — align exactly or move deliberately (>8px)`);
       }
+    }
+  }
+
+  // PLACEHOLDER_PROOF — pack scaffolds ship demo ratings and quotes; shipping
+  // them on a live listing is fabricated social proof. The flag survives edits
+  // on purpose: replace the content AND delete `placeholder` to clear it.
+  for (const [i, s] of screens.entries()) {
+    if ((s.layers || []).some(l => l.placeholder === true)) {
+      add('PLACEHOLDER_PROOF', i + 1, 'demo social proof from the pack (rating/quote). Replace with real numbers or remove the layer, then drop its "placeholder" flag.');
+    }
+  }
+
+  // DOUBLE_STATUS_BAR — real captures bring their own status bar; drawing the
+  // synthetic (iOS-styled) one on top reads as two clocks
+  for (const [i, s] of screens.entries()) {
+    if ((s.layers || []).some(l => l.type === 'device' && l.image && l.showStatus)) {
+      add('DOUBLE_STATUS_BAR', i + 1, 'device has a real capture and showStatus:true; the synthetic bar will overlap the one in the screenshot. Set showStatus:false.');
     }
   }
 

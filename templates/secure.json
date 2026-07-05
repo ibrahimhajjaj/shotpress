@@ -18,7 +18,7 @@
       },
       "layers": [
         {
-          "id": "lxpxf5e",
+          "id": "l0b81pn",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 500,
@@ -36,7 +36,7 @@
           "cy": 60.84
         },
         {
-          "id": "lgvtchc",
+          "id": "l42xn6b",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -54,7 +54,7 @@
           "cy": 123.24
         },
         {
-          "id": "l96ocsv",
+          "id": "llflek5",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -72,7 +72,7 @@
           "cy": 193.44
         },
         {
-          "id": "lgxx7wi",
+          "id": "lt4l4ib",
           "type": "rating",
           "stars": 5,
           "value": "4.9 · 12k ratings",
@@ -82,10 +82,11 @@
           "cx": 180,
           "cy": 251.16,
           "scale": 1,
-          "rot": 0
+          "rot": 0,
+          "placeholder": true
         },
         {
-          "id": "lhcosoo",
+          "id": "lntp67o",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -114,7 +115,7 @@
       },
       "layers": [
         {
-          "id": "lla0kec",
+          "id": "lgnh9cr",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -132,7 +133,7 @@
           "cy": 76.44
         },
         {
-          "id": "l65z389",
+          "id": "l65c0uo",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -150,7 +151,7 @@
           "cy": 127.14
         },
         {
-          "id": "lvg1tl3",
+          "id": "l52vgzs",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -168,7 +169,7 @@
           "cy": 191.1
         },
         {
-          "id": "lxz5yac",
+          "id": "lciwhvf",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -189,7 +190,7 @@
           "ry3d": -16
         },
         {
-          "id": "l8tx5at",
+          "id": "lslh8jf",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -220,7 +221,7 @@
       },
       "layers": [
         {
-          "id": "lpnw3lj",
+          "id": "l8mf3wo",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -238,7 +239,7 @@
           "cy": 76.44
         },
         {
-          "id": "lrpg7v1",
+          "id": "lfg777n",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -256,7 +257,7 @@
           "cy": 163.79999999999998
         },
         {
-          "id": "l8kcpec",
+          "id": "l4i7kgw",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -285,7 +286,7 @@
       },
       "layers": [
         {
-          "id": "l7kmx9l",
+          "id": "lerphx4",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -303,7 +304,7 @@
           "cy": 76.44
         },
         {
-          "id": "ll7zsfb",
+          "id": "lral8ko",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -321,7 +322,7 @@
           "cy": 136.5
         },
         {
-          "id": "l5hh13i",
+          "id": "lhgpzw5",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -350,7 +351,7 @@
       },
       "layers": [
         {
-          "id": "lp7f2f6",
+          "id": "l9fru5b",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -368,7 +369,7 @@
           "cy": 76.44
         },
         {
-          "id": "llx6se5",
+          "id": "l17t8ou",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -386,7 +387,7 @@
           "cy": 163.79999999999998
         },
         {
-          "id": "l0jery1",
+          "id": "laxhg2o",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -415,7 +416,7 @@
       },
       "layers": [
         {
-          "id": "le70ye4",
+          "id": "lu9agba",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -433,7 +434,7 @@
           "cy": 76.44
         },
         {
-          "id": "l1qjs5i",
+          "id": "lmrzyu2",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -451,7 +452,7 @@
           "cy": 163.79999999999998
         },
         {
-          "id": "l308lbv",
+          "id": "ltd6oq1",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -480,7 +481,7 @@
       },
       "layers": [
         {
-          "id": "le9spp4",
+          "id": "lur393t",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -498,7 +499,7 @@
           "cy": 76.44
         },
         {
-          "id": "lfi7uvx",
+          "id": "l0oq759",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -516,7 +517,7 @@
           "cy": 163.79999999999998
         },
         {
-          "id": "l4xr2cn",
+          "id": "l291fhe",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -545,7 +546,7 @@
       },
       "layers": [
         {
-          "id": "ltwtvnp",
+          "id": "lsj1bwd",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -563,7 +564,7 @@
           "cy": 76.44
         },
         {
-          "id": "lj6ustb",
+          "id": "ltmt2eg",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -581,7 +582,7 @@
           "cy": 163.79999999999998
         },
         {
-          "id": "lsa63i9",
+          "id": "l6dj2du",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -610,7 +611,7 @@
       },
       "layers": [
         {
-          "id": "lhigf3o",
+          "id": "lvkos0b",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -628,7 +629,7 @@
           "cy": 76.44
         },
         {
-          "id": "lnmiwui",
+          "id": "lrfpuyo",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -646,7 +647,7 @@
           "cy": 163.79999999999998
         },
         {
-          "id": "lcxeg93",
+          "id": "lnxbb5w",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -675,7 +676,7 @@
       },
       "layers": [
         {
-          "id": "lbzyzr7",
+          "id": "lmb9xfd",
           "type": "text",
           "font": "'Instrument Serif', serif",
           "weight": 400,
@@ -693,7 +694,7 @@
           "cy": 312
         },
         {
-          "id": "lsh7c4r",
+          "id": "l7zmx70",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,

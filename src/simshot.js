@@ -49,7 +49,8 @@ async function runFlow(flow, device, outDir) {
     await run('maestro', args, { cwd: outDir, maxBuffer: 16 * 1024 * 1024 });
   } catch (e) {
     if (isMissing(e)) throw toolError('maestro', 'flow capture needs Maestro (https://maestro.mobile.dev)');
-    throw new Error(`maestro flow failed: ${String(e.stderr || e.stdout || e.message).trim().split('\n').slice(-3).join(' ')}`);
+    throw new Error(`maestro flow failed: ${String(e.stderr || e.stdout || e.message).trim().split('\n').slice(-3).join(' ')}. `
+      + 'Plain simshot (no --flow) still captures whatever is on screen if you navigate by other means.');
   }
   const produced = (await readdir(outDir)).filter(f => f.endsWith('.png') && !before.has(f));
   if (!produced.length) {
@@ -113,7 +114,7 @@ async function startAndroidRecording(device, file) {
   };
 }
 
-export async function simShot({ platform, device = null, outDir = './shotpress-captures', name = 'sim', flow = null, video = false, duration = 20 }) {
+export async function simShot({ platform, device = null, outDir = './shotpress-captures', name = 'sim', flow = null, video = false, duration = 20, clean = null, browserPath = null }) {
   if (!['ios', 'android'].includes(platform)) {
     const err = new Error(`simshot needs a platform: ios or android (got "${platform ?? ''}")`);
     err.code = 'USAGE';
@@ -136,13 +137,25 @@ export async function simShot({ platform, device = null, outDir = './shotpress-c
     return { platform, ...(flow ? { flow } : {}), files, video: { path: mp4 } };
   }
 
+  let result;
   if (flow) {
-    const files = await runFlow(flow, device, outDir);
-    return { platform, flow, files };
+    result = { platform, flow, files: await runFlow(flow, device, outDir) };
+  } else {
+    const file = path.join(outDir, `${name}.png`);
+    if (platform === 'ios') await shotIos(device || 'booted', file);
+    else await shotAndroid(device, file);
+    result = { platform, files: [{ path: file }] };
   }
 
-  const file = path.join(outDir, `${name}.png`);
-  if (platform === 'ios') await shotIos(device || 'booted', file);
-  else await shotAndroid(device, file);
-  return { platform, files: [{ path: file }] };
+  if (clean && (clean.cropTop || clean.cropBottom || clean.masks?.length)) {
+    const { cleanImage } = await import('./imgedit.js');
+    const { launchBrowser } = await import('./harness.js');
+    const browser = await launchBrowser(browserPath);
+    try {
+      for (const f of result.files) await cleanImage(f.path, clean, { browser });
+    } finally {
+      await browser.close().catch(() => {});
+    }
+  }
+  return result;
 }

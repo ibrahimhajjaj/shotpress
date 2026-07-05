@@ -59,12 +59,24 @@ test('flags hero smaller than later headlines', () => {
   assert.ok(rules(p).has('HERO_NOT_LARGEST'));
 });
 
-test('every shipped pack template lints clean', async () => {
+test('shipped pack templates lint clean apart from their placeholder proof', async () => {
   for (const pack of ['productivity', 'fitness', 'finance', 'social', 'food', 'saas', 'ecommerce', 'ai', 'secure']) {
     const project = JSON.parse(await readFile(new URL(`../templates/${pack}.json`, import.meta.url), 'utf8'));
-    const found = [...rules(project)];
+    const found = [...rules(project)].filter(r => r !== 'PLACEHOLDER_PROOF');
     assert.deepEqual(found, [], `${pack} has findings: ${found.join(', ')}`);
   }
+});
+
+test('flags placeholder social proof and double status bars', () => {
+  const p = project([screen([
+    { id: 'r', type: 'rating', cx: 180, cy: 160, scale: 1, rot: 0, stars: 5, value: '4.9 · 12k', showValue: true, color: '#ffc53d', textColor: '#fff', placeholder: true },
+    device({ image: 'shot.png', showStatus: true }),
+  ])]);
+  const found = rules(p);
+  assert.ok(found.has('PLACEHOLDER_PROOF'));
+  assert.ok(found.has('DOUBLE_STATUS_BAR'));
+  const clean = project([screen([device({ image: 'shot.png', showStatus: false })])]);
+  assert.ok(!rules(clean).has('DOUBLE_STATUS_BAR'));
 });
 
 test('flags an official bezel on the wrong canvas', () => {

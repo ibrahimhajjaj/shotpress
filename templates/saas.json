@@ -18,7 +18,7 @@
       },
       "layers": [
         {
-          "id": "lfhdp9u",
+          "id": "lkubjpn",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -37,7 +37,7 @@
           "rot": 0
         },
         {
-          "id": "ln9p56h",
+          "id": "l5n7hm9",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -55,7 +55,7 @@
           "cy": 85.8
         },
         {
-          "id": "lzt66jq",
+          "id": "l4rlgd6",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -73,7 +73,7 @@
           "cy": 191.1
         },
         {
-          "id": "leb2lhb",
+          "id": "lthamio",
           "type": "rating",
           "stars": 5,
           "value": "4.9 · 12k ratings",
@@ -83,7 +83,8 @@
           "cx": 180,
           "cy": 245.7,
           "scale": 1,
-          "rot": 0
+          "rot": 0,
+          "placeholder": true
         }
       ]
     },
@@ -96,7 +97,7 @@
       },
       "layers": [
         {
-          "id": "lb1z2if",
+          "id": "ly3vikp",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -114,7 +115,7 @@
           "cy": 85.8
         },
         {
-          "id": "locp29i",
+          "id": "lqm1mh2",
           "type": "feature",
           "glyph": "✦",
           "title": "Real-time",
@@ -132,7 +133,7 @@
           "rot": 0
         },
         {
-          "id": "lcav2r3",
+          "id": "lxprg99",
           "type": "feature",
           "glyph": "◉",
           "title": "Automations",
@@ -150,7 +151,7 @@
           "rot": 0
         },
         {
-          "id": "ls3q2sj",
+          "id": "lb4xl2w",
           "type": "feature",
           "glyph": "❖",
           "title": "Integrations",
@@ -168,7 +169,7 @@
           "rot": 0
         },
         {
-          "id": "lyjnle7",
+          "id": "l4y3u43",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -197,7 +198,7 @@
       },
       "layers": [
         {
-          "id": "lea6aiz",
+          "id": "l83oq1q",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -215,7 +216,7 @@
           "cy": 124.8
         },
         {
-          "id": "l7cbzxx",
+          "id": "lic8831",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -233,7 +234,7 @@
           "cy": 218.40000000000003
         },
         {
-          "id": "ltyxhvx",
+          "id": "lgkgyfu",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -262,7 +263,7 @@
       },
       "layers": [
         {
-          "id": "l6np19c",
+          "id": "lr361e3",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -281,7 +282,7 @@
           "rot": 0
         },
         {
-          "id": "l0ytluc",
+          "id": "lo2mpei",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -309,7 +310,7 @@
       },
       "layers": [
         {
-          "id": "l4sg70i",
+          "id": "l3j44ld",
           "type": "text",
           "font": "'Instrument Serif', serif",
           "weight": 400,
@@ -324,10 +325,11 @@
           "rot": 0,
           "text": "“Atlas replaced five tools for us.”",
           "fontSize": 33,
-          "cy": 124.8
+          "cy": 124.8,
+          "placeholder": true
         },
         {
-          "id": "locitiz",
+          "id": "lipu430",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -342,10 +344,11 @@
           "rot": 0,
           "fontSize": 17,
           "text": "— Dana K., Head of Ops",
-          "cy": 241.8
+          "cy": 241.8,
+          "placeholder": true
         },
         {
-          "id": "le5jop1",
+          "id": "lif3c89",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -374,7 +377,7 @@
       },
       "layers": [
         {
-          "id": "ln84ysj",
+          "id": "lnuacgu",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -392,7 +395,7 @@
           "cy": 85.8
         },
         {
-          "id": "lxy8hid",
+          "id": "lkmg655",
           "type": "feature",
           "glyph": "◆",
           "title": "Dashboards",
@@ -410,7 +413,7 @@
           "rot": 0
         },
         {
-          "id": "l966cu0",
+          "id": "linjthu",
           "type": "feature",
           "glyph": "▲",
           "title": "Roadmaps",
@@ -428,7 +431,7 @@
           "rot": 0
         },
         {
-          "id": "lmjrftb",
+          "id": "l0lwfem",
           "type": "feature",
           "glyph": "★",
           "title": "Permissions",
@@ -446,7 +449,7 @@
           "rot": 0
         },
         {
-          "id": "lozfirb",
+          "id": "lihr3co",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -475,7 +478,7 @@
       },
       "layers": [
         {
-          "id": "l6w9n4i",
+          "id": "lt0kzmm",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -494,7 +497,7 @@
           "rot": 0
         },
         {
-          "id": "l077g1a",
+          "id": "l5r3khu",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -512,7 +515,7 @@
           "cy": 109.20000000000002
         },
         {
-          "id": "lady64a",
+          "id": "lv5r07c",
           "type": "feature",
           "glyph": "✓",
           "title": "No-code",
@@ -540,7 +543,7 @@
       },
       "layers": [
         {
-          "id": "lxh0jxw",
+          "id": "lw6b4p1",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -558,7 +561,7 @@
           "cy": 124.8
         },
         {
-          "id": "lnakb5k",
+          "id": "llqr9eu",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -576,7 +579,7 @@
           "cy": 218.40000000000003
         },
         {
-          "id": "lsnf69u",
+          "id": "lu8o05x",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -605,7 +608,7 @@
       },
       "layers": [
         {
-          "id": "lmb2dcg",
+          "id": "lchbzxg",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -624,7 +627,7 @@
           "rot": 0
         },
         {
-          "id": "l8oz7cy",
+          "id": "lstlcmi",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -652,7 +655,7 @@
       },
       "layers": [
         {
-          "id": "lulu5u4",
+          "id": "ls62w7w",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -670,7 +673,7 @@
           "cy": 265.20000000000005
         },
         {
-          "id": "lburmv1",
+          "id": "l51otg4",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -688,7 +691,7 @@
           "cy": 366.59999999999997
         },
         {
-          "id": "l8qz11w",
+          "id": "lu2uzx6",
           "type": "badge",
           "variant": "pill",
           "text": "Start free trial",

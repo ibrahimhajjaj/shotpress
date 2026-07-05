@@ -59,8 +59,13 @@ npx shotpress simshot ios --flow screens.yaml --out captures --json
 ```
 
 iOS simulator screenshots come out at native device pixels (a 6.9″ simulator
-gives 1320×2868 — already store-tier). Drop the resulting paths into the
-device layers' `image` fields either way.
+gives 1320×2868 — already store-tier). Dirty captures clean up in-pipeline:
+`--crop-bottom <px>` / `--crop-top <px>` trim, and repeatable `--mask x,y,w,h`
+fills a rect (dev buttons, debug overlays) with its surrounding color. Drop
+the resulting paths into the device layers' `image` fields either way.
+
+Real captures carry their own status bar: set `showStatus: false` on those
+device layers or the synthetic (iOS-styled) bar doubles it — lint flags this.
 
 - **App preview videos**: add `--video` — alone it records `--duration <s>`
   (default 20), with `--flow` it records the entire Maestro-driven session and
@@ -90,6 +95,7 @@ formulas, treatment schedule), and every rule is numeric.
 5. **Lint, render, self-review, iterate**
 
 ```bash
+npx shotpress lint project.json --sketch   # ascii map of layer positions
 npx shotpress lint project.json --json     # numeric design critique
 npx shotpress validate project.json
 npx shotpress render project.json --out shots --json          # one format
@@ -104,8 +110,9 @@ until clean, then:
 npx shotpress render-all project.json --stores appstore,play --zip --json
 ```
 
-`render-all` writes `<out>/<store>/<format>/screen-NN.png` at every required
-store size. `--json` prints a machine-readable manifest to stdout.
+`render-all` writes `<out>/<store>/<format>/screen-NN.png` — note everything
+nests under the `--out` dir. `--json` prints absolute paths, so read those
+rather than guessing locations.
 
 6. **RTL markets (Arabic, Hebrew).** Translate every text/title/sub string,
 set text fonts to `'Cairo', sans-serif` (vendored, works offline), and render

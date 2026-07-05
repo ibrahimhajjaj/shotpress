@@ -18,7 +18,7 @@
       },
       "layers": [
         {
-          "id": "lkhb9mf",
+          "id": "l4j7uj5",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -37,7 +37,7 @@
           "rot": 0
         },
         {
-          "id": "lohhs3p",
+          "id": "le5b453",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -55,7 +55,7 @@
           "cy": 85.8
         },
         {
-          "id": "l328ky1",
+          "id": "lo6mdoj",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -73,7 +73,7 @@
           "cy": 191.1
         },
         {
-          "id": "lbny4ny",
+          "id": "l75avrk",
           "type": "rating",
           "stars": 5,
           "value": "4.8 · 61k ratings",
@@ -83,7 +83,8 @@
           "cx": 180,
           "cy": 245.7,
           "scale": 1,
-          "rot": 0
+          "rot": 0,
+          "placeholder": true
         }
       ]
     },
@@ -96,7 +97,7 @@
       },
       "layers": [
         {
-          "id": "lez5f93",
+          "id": "l0g62io",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -114,7 +115,7 @@
           "cy": 85.8
         },
         {
-          "id": "lfuecas",
+          "id": "l0dj8ci",
           "type": "feature",
           "glyph": "✦",
           "title": "Adaptive plans",
@@ -132,7 +133,7 @@
           "rot": 0
         },
         {
-          "id": "l2vm9fc",
+          "id": "l2l4uq4",
           "type": "feature",
           "glyph": "◉",
           "title": "Live tracking",
@@ -150,7 +151,7 @@
           "rot": 0
         },
         {
-          "id": "lhd68l7",
+          "id": "lfm1xox",
           "type": "feature",
           "glyph": "★",
           "title": "Recovery",
@@ -168,7 +169,7 @@
           "rot": 0
         },
         {
-          "id": "lnxcj05",
+          "id": "lo3zhip",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -197,7 +198,7 @@
       },
       "layers": [
         {
-          "id": "lqke2ma",
+          "id": "lergpa0",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -215,7 +216,7 @@
           "cy": 124.8
         },
         {
-          "id": "ljuimc2",
+          "id": "lr9x2hd",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -233,7 +234,7 @@
           "cy": 218.40000000000003
         },
         {
-          "id": "lv0teox",
+          "id": "lgalfio",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -262,7 +263,7 @@
       },
       "layers": [
         {
-          "id": "lb7thh0",
+          "id": "lwz4if9",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -281,7 +282,7 @@
           "rot": 0
         },
         {
-          "id": "lrda1it",
+          "id": "l3foya7",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -309,7 +310,7 @@
       },
       "layers": [
         {
-          "id": "lnuoomc",
+          "id": "l5pdwto",
           "type": "text",
           "font": "'Instrument Serif', serif",
           "weight": 400,
@@ -324,10 +325,11 @@
           "rot": 0,
           "text": "“Down 18 pounds and stronger than ever.”",
           "fontSize": 33,
-          "cy": 124.8
+          "cy": 124.8,
+          "placeholder": true
         },
         {
-          "id": "lmbi6ss",
+          "id": "lr0cnry",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -342,10 +344,11 @@
           "rot": 0,
           "fontSize": 17,
           "text": "— Jordan M., ★★★★★",
-          "cy": 241.8
+          "cy": 241.8,
+          "placeholder": true
         },
         {
-          "id": "llu8fbw",
+          "id": "lkfoa5s",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -374,7 +377,7 @@
       },
       "layers": [
         {
-          "id": "lbl186g",
+          "id": "ll2e7ih",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -392,7 +395,7 @@
           "cy": 85.8
         },
         {
-          "id": "lsy8bgr",
+          "id": "lgz3c54",
           "type": "feature",
           "glyph": "▲",
           "title": "Progress",
@@ -410,7 +413,7 @@
           "rot": 0
         },
         {
-          "id": "lq27nns",
+          "id": "lnhsbdb",
           "type": "feature",
           "glyph": "◆",
           "title": "Streaks",
@@ -428,7 +431,7 @@
           "rot": 0
         },
         {
-          "id": "lqj32u5",
+          "id": "luw6mz7",
           "type": "feature",
           "glyph": "❖",
           "title": "Community",
@@ -446,7 +449,7 @@
           "rot": 0
         },
         {
-          "id": "l4yvbc1",
+          "id": "lqb5bd9",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -475,7 +478,7 @@
       },
       "layers": [
         {
-          "id": "l7r3cbk",
+          "id": "l6pqdl3",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -494,7 +497,7 @@
           "rot": 0
         },
         {
-          "id": "lytv4ti",
+          "id": "lnse69v",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -512,7 +515,7 @@
           "cy": 109.20000000000002
         },
         {
-          "id": "ly7jzcj",
+          "id": "l9fknq8",
           "type": "feature",
           "glyph": "✓",
           "title": "Form check",
@@ -540,7 +543,7 @@
       },
       "layers": [
         {
-          "id": "lt4agcu",
+          "id": "l7y3xds",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -558,7 +561,7 @@
           "cy": 124.8
         },
         {
-          "id": "lbmncut",
+          "id": "lypcy80",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 600,
@@ -576,7 +579,7 @@
           "cy": 218.40000000000003
         },
         {
-          "id": "ln2aats",
+          "id": "lzbt3l3",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -605,7 +608,7 @@
       },
       "layers": [
         {
-          "id": "l1yqeeg",
+          "id": "l1qvjv4",
           "type": "device",
           "kind": "phone",
           "os": "ios",
@@ -624,7 +627,7 @@
           "rot": 0
         },
         {
-          "id": "lqf7vyo",
+          "id": "lsqq5f1",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -652,7 +655,7 @@
       },
       "layers": [
         {
-          "id": "lps28kw",
+          "id": "lmw7p5f",
           "type": "text",
           "font": "'Space Grotesk', sans-serif",
           "weight": 700,
@@ -670,7 +673,7 @@
           "cy": 265.20000000000005
         },
         {
-          "id": "ll4a31d",
+          "id": "lv2lax6",
           "type": "text",
           "font": "'Manrope', sans-serif",
           "weight": 500,
@@ -688,7 +691,7 @@
           "cy": 366.59999999999997
         },
         {
-          "id": "l2wwn4y",
+          "id": "lh5htk3",
           "type": "badge",
           "variant": "pill",
           "text": "Try Pulse free",
