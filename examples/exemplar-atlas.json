@@ -1,0 +1,447 @@
+{
+  "format": "iphone",
+  "tokens": {
+    "accent": "#3d84f5",
+    "ink": "#ffffff",
+    "muted": "rgba(255,255,255,.72)",
+    "ground": "#0a1428",
+    "deep": "#0e1c3d",
+    "rise": "#132a54"
+  },
+  "styles": {
+    "hero": {
+      "font": "'Space Grotesk', sans-serif",
+      "fontSize": 46,
+      "weight": 700,
+      "color": "@ink",
+      "align": "center",
+      "width": 312,
+      "lineHeight": 1.04,
+      "accent": "@accent"
+    },
+    "eyebrow": {
+      "role": "eyebrow",
+      "font": "'Space Grotesk', sans-serif",
+      "fontSize": 17,
+      "weight": 600,
+      "color": "@muted",
+      "align": "center",
+      "width": 300,
+      "lineHeight": 1.2,
+      "accent": "@accent"
+    },
+    "headline": {
+      "font": "'Space Grotesk', sans-serif",
+      "fontSize": 30,
+      "weight": 700,
+      "color": "@ink",
+      "align": "center",
+      "width": 312,
+      "lineHeight": 1.08,
+      "accent": "@accent"
+    },
+    "sub": {
+      "font": "'Manrope', sans-serif",
+      "fontSize": 17,
+      "weight": 500,
+      "color": "@muted",
+      "align": "center",
+      "width": 300,
+      "lineHeight": 1.4,
+      "accent": "@accent"
+    },
+    "stat": {
+      "font": "'Space Grotesk', sans-serif",
+      "fontSize": 64,
+      "weight": 700,
+      "color": "@ink",
+      "align": "center",
+      "width": 300,
+      "lineHeight": 1,
+      "accent": "@accent"
+    }
+  },
+  "decorations": [
+    {
+      "id": "glow",
+      "type": "shape",
+      "shape": "ellipse",
+      "fill": "@accent",
+      "opacity": 0.1,
+      "w0": 480,
+      "h0": 420,
+      "cx": 180,
+      "cy": 40,
+      "scale": 1,
+      "rot": 0
+    }
+  ],
+  "brand": {
+    "logo": null,
+    "appName": "Atlas",
+    "colors": [],
+    "accent": "@accent",
+    "bezel": "black",
+    "clayColor": "@accent"
+  },
+  "screens": [
+    {
+      "bg": {
+        "type": "gradient",
+        "value": "radial-gradient(120% 85% at 50% 8%, @deep, @ground)",
+        "pattern": "none",
+        "image": null
+      },
+      "layers": [
+        {
+          "id": "s1-eyebrow",
+          "type": "text",
+          "style": "eyebrow",
+          "text": "ATLAS",
+          "cx": 180,
+          "cy": 110
+        },
+        {
+          "id": "s1-hero",
+          "type": "text",
+          "style": "hero",
+          "text": "Your team, all in *one place*",
+          "cx": 180,
+          "cy": 185
+        },
+        {
+          "id": "s1-rating",
+          "type": "rating",
+          "stars": 5,
+          "value": "4.9 · 3,200 ratings",
+          "showValue": true,
+          "color": "#ffc53d",
+          "textColor": "@ink",
+          "cx": 180,
+          "cy": 272,
+          "scale": 1,
+          "rot": 0
+        },
+        {
+          "id": "s1-device",
+          "type": "device",
+          "kind": "phone",
+          "os": "ios",
+          "orientation": "portrait",
+          "showStatus": true,
+          "statusDark": false,
+          "image": null,
+          "beforeImage": null,
+          "treatment": "plain",
+          "bezel": "black",
+          "showVideo": false,
+          "accent": "@accent",
+          "cx": 180,
+          "cy": 575,
+          "scale": 0.92,
+          "rot": 0
+        }
+      ]
+    },
+    {
+      "bg": {
+        "type": "gradient",
+        "value": "radial-gradient(120% 85% at 50% 6%, #12244a, @ground)",
+        "pattern": "none",
+        "image": null
+      },
+      "layers": [
+        {
+          "id": "s2-headline",
+          "type": "text",
+          "style": "headline",
+          "text": "See *every* project at a glance",
+          "cx": 180,
+          "cy": 110
+        },
+        {
+          "id": "s2-sub",
+          "type": "text",
+          "style": "sub",
+          "text": "Tasks, docs, and timelines on one board.",
+          "cx": 180,
+          "cy": 175
+        },
+        {
+          "id": "s2-callout",
+          "type": "callout",
+          "text": "Live status",
+          "arrow": "down",
+          "cstyle": "accent",
+          "accent": "@accent",
+          "cx": 180,
+          "cy": 330,
+          "scale": 1,
+          "rot": 0
+        },
+        {
+          "id": "s2-device",
+          "type": "device",
+          "kind": "phone",
+          "os": "ios",
+          "orientation": "portrait",
+          "showStatus": true,
+          "statusDark": false,
+          "image": null,
+          "beforeImage": null,
+          "treatment": "angled",
+          "bezel": "black",
+          "showVideo": false,
+          "accent": "@accent",
+          "pose": "hero-left",
+          "cx": 180,
+          "cy": 565,
+          "scale": 0.85,
+          "rot": 0
+        }
+      ]
+    },
+    {
+      "bg": {
+        "type": "gradient",
+        "value": "linear-gradient(180deg, @deep, @ground)",
+        "pattern": "none",
+        "image": null
+      },
+      "layers": [
+        {
+          "id": "s3-headline",
+          "type": "text",
+          "style": "headline",
+          "text": "Built for how teams *actually* work",
+          "cx": 180,
+          "cy": 110
+        },
+        {
+          "id": "s3-f1",
+          "type": "feature",
+          "glyph": "◎",
+          "title": "Assign in a tap",
+          "sub": "Owners and due dates in one move.",
+          "iconColor": "@ink",
+          "iconBg": "@accent",
+          "bgShape": "round",
+          "titleColor": "@ink",
+          "subColor": "@muted",
+          "font": "'Manrope', sans-serif",
+          "w0": 288,
+          "cx": 180,
+          "cy": 215,
+          "scale": 1,
+          "rot": 0
+        },
+        {
+          "id": "s3-f2",
+          "type": "feature",
+          "glyph": "◆",
+          "title": "Automations",
+          "sub": "Move work forward while you sleep.",
+          "iconColor": "@ink",
+          "iconBg": "@accent",
+          "bgShape": "round",
+          "titleColor": "@ink",
+          "subColor": "@muted",
+          "font": "'Manrope', sans-serif",
+          "w0": 288,
+          "cx": 180,
+          "cy": 297,
+          "scale": 1,
+          "rot": 0
+        },
+        {
+          "id": "s3-f3",
+          "type": "feature",
+          "glyph": "❖",
+          "title": "Connects your stack",
+          "sub": "Slack, GitHub, and Drive built in.",
+          "iconColor": "@ink",
+          "iconBg": "@accent",
+          "bgShape": "round",
+          "titleColor": "@ink",
+          "subColor": "@muted",
+          "font": "'Manrope', sans-serif",
+          "w0": 288,
+          "cx": 180,
+          "cy": 379,
+          "scale": 1,
+          "rot": 0
+        }
+      ]
+    },
+    {
+      "bg": {
+        "type": "gradient",
+        "value": "radial-gradient(130% 90% at 50% 20%, @rise, @deep)",
+        "pattern": "none",
+        "image": null
+      },
+      "layers": [
+        {
+          "id": "s4-headline",
+          "type": "text",
+          "style": "headline",
+          "text": "Let Atlas handle the *busywork*",
+          "cx": 180,
+          "cy": 110
+        },
+        {
+          "id": "s4-sub",
+          "type": "text",
+          "style": "sub",
+          "text": "Rules that run the moment work changes.",
+          "cx": 180,
+          "cy": 175
+        },
+        {
+          "id": "s4-icon",
+          "type": "icon",
+          "glyph": "↻",
+          "color": "@ink",
+          "iconBg": "@accent",
+          "bgShape": "circle",
+          "size": 52,
+          "cx": 180,
+          "cy": 258,
+          "scale": 1,
+          "rot": 0
+        },
+        {
+          "id": "s4-device",
+          "type": "device",
+          "kind": "phone",
+          "os": "ios",
+          "orientation": "portrait",
+          "showStatus": true,
+          "statusDark": false,
+          "image": null,
+          "beforeImage": null,
+          "treatment": "plain",
+          "bezel": "black",
+          "showVideo": false,
+          "accent": "@accent",
+          "pose": "tilt",
+          "cx": 180,
+          "cy": 575,
+          "scale": 0.9,
+          "rot": 0
+        }
+      ]
+    },
+    {
+      "bg": {
+        "type": "gradient",
+        "value": "linear-gradient(180deg, @rise, @deep)",
+        "pattern": "none",
+        "image": null
+      },
+      "layers": [
+        {
+          "id": "s5-stat",
+          "type": "text",
+          "style": "stat",
+          "text": "3x",
+          "cx": 180,
+          "cy": 150
+        },
+        {
+          "id": "s5-sub",
+          "type": "text",
+          "style": "sub",
+          "text": "faster handoffs between teams",
+          "cx": 180,
+          "cy": 215
+        },
+        {
+          "id": "s5-badge",
+          "type": "badge",
+          "variant": "pill",
+          "text": "Trusted by growing teams",
+          "appName": "Atlas",
+          "accent": "@accent",
+          "cx": 180,
+          "cy": 300,
+          "scale": 1,
+          "rot": 0
+        },
+        {
+          "id": "s5-device",
+          "type": "device",
+          "kind": "phone",
+          "os": "ios",
+          "orientation": "portrait",
+          "showStatus": true,
+          "statusDark": false,
+          "image": null,
+          "beforeImage": null,
+          "treatment": "multi",
+          "bezel": "black",
+          "showVideo": false,
+          "accent": "@accent",
+          "cx": 180,
+          "cy": 575,
+          "scale": 0.68,
+          "rot": 0
+        }
+      ]
+    },
+    {
+      "bg": {
+        "type": "gradient",
+        "value": "radial-gradient(120% 100% at 50% 35%, @rise, @deep)",
+        "pattern": "none",
+        "image": null
+      },
+      "layers": [
+        {
+          "id": "s6-hero",
+          "type": "text",
+          "style": "hero",
+          "text": "Bring your team *together*",
+          "cx": 180,
+          "cy": 170
+        },
+        {
+          "id": "s6-line",
+          "type": "shape",
+          "shape": "line",
+          "fill": "@accent",
+          "stroke": false,
+          "strokeColor": "@ink",
+          "strokeW": 0,
+          "radius": 2,
+          "w0": 72,
+          "h0": 4,
+          "cx": 180,
+          "cy": 240,
+          "scale": 1,
+          "rot": 0
+        },
+        {
+          "id": "s6-sub",
+          "type": "text",
+          "style": "sub",
+          "text": "Free for your first 10 seats.",
+          "cx": 180,
+          "cy": 278
+        },
+        {
+          "id": "s6-badge",
+          "type": "badge",
+          "variant": "pill",
+          "text": "Start free",
+          "appName": "Atlas",
+          "accent": "@accent",
+          "cx": 180,
+          "cy": 352,
+          "scale": 1,
+          "rot": 0
+        }
+      ]
+    }
+  ]
+}

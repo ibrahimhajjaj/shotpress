@@ -144,6 +144,31 @@ export function sketchProject(project) {
   return lines.join('\n');
 }
 
+// The rule book, so an agent can design to spec instead of learning by tripping
+// wires. Kept next to the checks below — update both together.
+export const LINT_RULES = [
+  { rule: 'HERO_NOT_LARGEST', checks: "screen 1's largest text is the biggest in the set" },
+  { rule: 'NO_SOCIAL_PROOF', checks: 'a rating or badge appears in screens 1-2 (sets of 3+)' },
+  { rule: 'TYPE_SCALE_NOISE', checks: '≤4 distinct font sizes; no two within 2px inside one font family' },
+  { rule: 'BODY_TOO_SMALL', checks: 'text ≥60px real (eyebrow/short-all-caps: ≥40px real)' },
+  { rule: 'COLOR_SPRAWL', checks: '≤3 non-neutral text colours across the set' },
+  { rule: 'CONTRAST_LOW', checks: 'text vs background ≥3:1 (ideally ≥4.5) where there is no scrim' },
+  { rule: 'COMPOSITION_REPEAT', checks: 'no treatment+pose bucket runs 3+ screens in a row' },
+  { rule: 'MONOTONE_BG', checks: 'backgrounds are not identical across every screen (sets of 4+)' },
+  { rule: 'HEADLINE_TOO_LONG', checks: 'headline ≤6 words (≥26px) / subhead ≤14 words' },
+  { rule: 'FEATURE_JARGON', checks: 'no ™/® or camelCase product jargon in screens 1-3' },
+  { rule: 'ALIGNMENT_DRIFT', checks: 'same-family headline anchors line up exactly or move ≥8px' },
+  { rule: 'PLACEHOLDER_PROOF', checks: 'no layer still flagged placeholder:true (fabricated proof)' },
+  { rule: 'DOUBLE_STATUS_BAR', checks: 'a device with a real capture does not also draw showStatus' },
+  { rule: 'TEXT_OVERLAP', checks: 'no two text layers whose boxes collide' },
+  { rule: 'TEXT_OVER_DEVICE_NO_SCRIM', checks: 'text over a device frame has a scrim set' },
+  { rule: 'SAFE_ZONE', checks: 'text inside the 4.5% side margin and out of the top 6% / bottom 4%' },
+  { rule: 'FRAME_ART_TILTED', checks: 'official Apple bezels carry no rotation or 3D pose' },
+  { rule: 'FRAME_KIND_MISMATCH', checks: 'a bezel matches the canvas format (and stays off Play)' },
+  { rule: 'DEVICE_SCALE_BOUNDS', checks: 'device scale within 0.6-1.35 (bleed exempt)' },
+  { rule: 'LAYER_DENSITY', checks: '≤3 text and ≤2 device layers per screen' },
+];
+
 export function lintProject(project) {
   const findings = [];
   const add = (rule, screen, message) => findings.push({ rule, screen, message });

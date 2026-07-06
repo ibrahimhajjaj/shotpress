@@ -10,6 +10,24 @@ spec: framed device mockups on styled backgrounds with headlines, ratings,
 callouts and badges, at exact store pixel sizes. Everything runs through
 `npx shotpress` — non-interactive, JSON in, files out.
 
+## Know the toolbox first
+
+Don't guess the vocabulary from memory — the tool tells you what it has:
+
+```bash
+npx shotpress schema        # every layer type, its fields, enums, and DEFAULTS (--markdown for a table)
+npx shotpress lint --rules  # every design rule and its threshold, so you design to spec
+npx shotpress new --kitchen-sink --out ref.json   # a project that uses every layer type once
+npx shotpress decor         # the background/depth generators
+npx shotpress pose          # named 3D device poses
+```
+
+The layer types are `device text rating callout badge logo image shape icon
+feature` (plus add-keyword aliases `heading`/`circle`/`line`). `LAYERS.md` in
+this skill directory is the same catalogue in prose. Read `schema` before
+building any layer beyond text/device — half the toolbox (shape, icon, callout,
+badge, logo, image) is invisible if you only trust a text-heavy scaffold.
+
 ## Workflow
 
 1. **Discover options**
@@ -84,6 +102,21 @@ device layers or the synthetic (iOS-styled) bar doubles it — lint flags this.
 - Put the user's real app screenshots on the `image` field of `device` layers —
   local file paths (relative to project.json) or data URLs both work.
 - `bg.value` takes any CSS color or gradient; `bg.type` is solid | gradient | image.
+- For depth beyond a flat background, `shotpress decor <kind>` generates on-brand
+  SVG art (aurora `mesh` background, `grain` overlay, `glow`/`blob`/`rings`/`waves`
+  behind content, and `mask --image <shot> --shape circle|rounded` to clip a
+  screenshot into an avatar bubble or a magnified-detail callout). It prints a
+  paste-ready `bg` or image-`layer` snippet with `--json`. Run `shotpress decor`
+  with no kind to list them. Use with restraint (see DESIGN.md "Depth and
+  texture") — one motif, behind content, low opacity.
+- `bg.pattern` overlays a subtle texture on any background: `none` | `dots` |
+  `grid` | `lines`. Official Apple bezels (more premium than the synthetic frame)
+  come from `shotpress frames install --accept-apple-terms`, then set a device
+  layer's `frame` (e.g. `"iphone"`); they must stay un-posed and off Play sets.
+- Custom display face: `render --fonts <dir>` embeds every font file in the
+  directory (family = the file's base name) so `font: "'MyFont', sans-serif"`
+  renders offline. The four bundled families (Space Grotesk, Manrope, Instrument
+  Serif, Cairo) always work; other Google families load from the network.
 - Device layers: `kind` (phone/tablet/mac/watch), `bezel` (black/white/clay),
   `notch` (auto/island/notch/punch/none), `treatment` (plain/bleed/angled/
   compare/duo/pano/multi), and `rx3d`/`ry3d` for a 3D perspective pose.
@@ -104,6 +137,19 @@ directory before rewriting copy or composition — it's the doctrine that
 lifts a set well past pack defaults (narrative arc, type scale, copy
 formulas, treatment schedule), and every rule is numeric.
 
+   A project can carry a small design system so consistency isn't hand-copied
+   across dozens of layers — it expands automatically for `render`/`lint`:
+   - `"tokens"`: named colours (`{"accent":"#2a6fdb","ink":"#fff","muted":"rgba(255,255,255,.72)"}`).
+     Reference them as `@accent` anywhere a string appears (colours, gradients, brand).
+   - `"styles"`: named text presets (`{"eyebrow":{...},"headline":{...}}`); a text
+     layer uses one via `"style":"eyebrow"` and its own fields still win.
+   - `"decorations"`: layers drawn on every screen (define the signature motif once).
+   - `"pose":"hero-left"` on a device layer expands to a tasteful `rx3d/ry3d`
+     (see `shotpress pose`). One edit reskins the whole set.
+
+   `render`/`lint`/`validate` see the expanded form. To hand-edit or `watch` a
+   tokenized project, bake it first: `shotpress resolve project.json --out flat.json`.
+
 5. **Lint, render, self-review, iterate**
 
 ```bash
@@ -121,7 +167,9 @@ check: it reports the same computed geometry lint reasons about, so an agent can
 see a headline wrapped to 3 lines without opening the PNG. Then render one
 format and actually look at the PNGs — full size for promise-clarity, and
 downscaled to ~120px for thumbnail legibility (screens 1–3 must read at
-search-result size). Iterate until clean, then:
+search-result size). `render --contact` also writes one numbered montage of the
+whole set, which is how you judge rhythm across screens at a glance. Iterate
+until clean, then:
 
 ```bash
 npx shotpress render-all project.json --stores appstore,play --zip --json

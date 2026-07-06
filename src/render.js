@@ -113,6 +113,29 @@ function pngSize(buf) {
   return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
 }
 
+// Tiles the rendered screens into one montage, so the whole-set rhythm can be
+// judged at a glance (the way you actually review a listing) without shelling
+// out to an image tool. Composed in the page's own canvas.
+async function contactSheet(page, files, { cols = 4, thumbW = 300, gap = 16, bg = '#0b0b12' } = {}) {
+  const b64s = await Promise.all(files.map(async (f) => (await readFile(f.path)).toString('base64')));
+  const dataUrl = await page.evaluate(async ([list, c, tw, g, back]) => {
+    const imgs = await Promise.all(list.map(s => new Promise((res) => { const im = new Image(); im.onload = () => res(im); im.src = 'data:image/png;base64,' + s; })));
+    const ar = imgs[0].height / imgs[0].width, th = Math.round(tw * ar);
+    const cols2 = Math.min(c, imgs.length), rows = Math.ceil(imgs.length / cols2);
+    const W = cols2 * tw + (cols2 + 1) * g, H = rows * th + (rows + 1) * g;
+    const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d'); ctx.fillStyle = back; ctx.fillRect(0, 0, W, H);
+    imgs.forEach((im, i) => {
+      const x = g + (i % cols2) * (tw + g), y = g + Math.floor(i / cols2) * (th + g);
+      ctx.drawImage(im, x, y, tw, th);
+      ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(x + 6, y + 6, 26, 22);
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 15px system-ui,sans-serif'; ctx.fillText(String(i + 1), x + 12, y + 22);
+    });
+    return canvas.toDataURL('image/png');
+  }, [b64s, cols, thumbW, gap, bg]);
+  return Buffer.from(dataUrl.split(',')[1], 'base64');
+}
+
 export async function renderProject(project, opts = {}, sharedHarness = null) {
   const {
     format = project.format,
@@ -122,6 +145,8 @@ export async function renderProject(project, opts = {}, sharedHarness = null) {
     screens = null,       // 1-indexed subset
     name = 'screen',
     rtl = false,
+    contact = false,
+    fontsDir = null,
     browserPath = null,
     baseDir = process.cwd(),
     onProgress = () => {},
@@ -158,7 +183,7 @@ export async function renderProject(project, opts = {}, sharedHarness = null) {
   const harness = sharedHarness ?? await launchHarness({ browserPath });
   let context;
   try {
-    const opened = await openEngine(harness, { deviceScaleFactor: target.scale });
+    const opened = await openEngine(harness, { deviceScaleFactor: target.scale, fontsDir });
     context = opened.context;
     const page = opened.page;
 
@@ -223,7 +248,14 @@ export async function renderProject(project, opts = {}, sharedHarness = null) {
       files.push({ screen: idx + 1, path: file, width: target.w, height: target.h });
     }
 
-    return { format, scale: target.scale, files, warnings };
+    let contactFile = null;
+    if (contact && type !== 'svg' && files.length > 1) {
+      const buf = await contactSheet(page, files);
+      contactFile = path.join(outDir, `${name}-contact.png`);
+      await writeFile(contactFile, buf);
+    }
+
+    return { format, scale: target.scale, files, warnings, ...(contactFile ? { contact: contactFile } : {}) };
   } finally {
     await context?.close().catch(() => {});
     if (!sharedHarness) await harness.close();

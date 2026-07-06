@@ -1,7 +1,10 @@
 import { FORMATS } from './formats.js';
 
-const LAYER_TYPES = ['device', 'text', 'rating', 'callout', 'badge', 'logo', 'image', 'shape', 'icon', 'feature'];
-const ENUMS = {
+export const LAYER_TYPES = ['device', 'text', 'rating', 'callout', 'badge', 'logo', 'image', 'shape', 'icon', 'feature'];
+// convenience add-keywords the engine maps onto a base type with a preset
+export const LAYER_ALIASES = { heading: 'text', circle: 'shape', line: 'shape' };
+export const BG_PATTERNS = ['none', 'dots', 'grid', 'lines'];
+export const ENUMS = {
   'device.kind': ['phone', 'tablet', 'mac', 'watch'],
   'device.os': ['ios', 'android', 'mac', 'watch'],
   'device.treatment': ['plain', 'bleed', 'angled', 'compare', 'duo', 'pano', 'multi'],

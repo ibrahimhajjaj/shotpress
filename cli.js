@@ -6,12 +6,16 @@ import { FORMATS, STORES, formatList } from './src/formats.js';
 import { PACKS, packList } from './src/packs.js';
 import { validateProject } from './src/schema.js';
 import { renderProject } from './src/render.js';
-import { buildProject, launchHarness, reflowProject } from './src/harness.js';
+import { buildProject, launchHarness, reflowProject, introspectLayers } from './src/harness.js';
+import { buildSchema, schemaMarkdown, buildKitchenSink } from './src/schema-doc.js';
+import { LAYER_TYPES, LAYER_ALIASES } from './src/schema.js';
+import { resolveProject, POSES } from './src/resolve.js';
 import { discoverExternalPacks, loadPackFile } from './src/external-packs.js';
 import { fastlanePath } from './src/fastlane.js';
 import { installFrames, listFrames, APPLE_BEZELS, APPLE_TERMS_URL } from './src/frames.js';
 import { zipFiles, zipName } from './src/zip.js';
-import { lintProject, sketchProject, measureProject } from './src/lint.js';
+import { lintProject, sketchProject, measureProject, LINT_RULES } from './src/lint.js';
+import { decorKinds, makeDecor } from './src/decor.js';
 import { parseMasks } from './src/imgedit.js';
 import { captureRoutes } from './src/capture.js';
 import { simShot } from './src/simshot.js';
@@ -31,7 +35,11 @@ Usage:
   shotpress simshot <ios|android>      screenshot the booted simulator/emulator
   shotpress packs                      list starter packs (JSON)
   shotpress formats                    list formats (JSON)
+  shotpress decor [kind]               generate on-brand background/overlay SVG (no kind = list)
+  shotpress schema                     authoritative layer schema — fields, enums, defaults (--markdown)
+  shotpress pose                       list named 3D device pose presets (device.pose)
   shotpress validate <project.json>    validate a project spec
+  shotpress resolve <project.json>     expand tokens/styles/decorations to concrete layers
   shotpress lint <project.json>        design-quality checks (numeric, pre-render)
   shotpress variants <project.json>    emit A/B variant projects for CPP tests
   shotpress edit <project.json>        open the visual editor; edits autosave back
@@ -47,6 +55,8 @@ render options:
   --screens 1,3,5     subset, 1-indexed (default all)
   --name <prefix>     filename prefix (default "screen")
   --rtl               mirror the layout for RTL markets (supply translated copy)
+  --contact           also write a numbered montage of the whole set
+  --fonts <dir>       serve extra font files (family = file name) for offline custom faces
   --zip               also write a zip bundle
   --json              print a JSON manifest to stdout
 
@@ -64,6 +74,7 @@ new options:
   --accent <hex>      brand.accent
   --screens <n>       how many screens (blank projects default 3; also trims a --pack to N)
   --honest            omit the pack's demo rating/quote layers (--no-social alias)
+  --kitchen-sink      scaffold one screen using every layer type (living reference)
   --out <file>        write to file instead of stdout
 
 capture options:
@@ -92,6 +103,7 @@ simshot options:
 lint options:
   --sketch            print an ascii map of layer positions per screen
   --measure           print computed line-count and bbox per layer (no render)
+  --rules             list every lint rule and its threshold (design to spec)
   --strict            non-zero exit when findings exist
   --json              findings as JSON
 
@@ -104,6 +116,19 @@ variants options:
 watch options:
   --window            use a dedicated Chromium window instead of your browser
   --no-open           print the URL instead of opening the browser (remote/SSH)
+
+decor options (run "shotpress decor" with no kind to list kinds + usage):
+  --color <hex>       primary colour (default #6d5cf5)
+  --color2 <hex>      second colour for gradients/mesh (default: a lighter --color)
+  --seed <n>          deterministic variation, so a set shares one family (default 1)
+  --opacity <0-1>     override the kind's default opacity
+  --size <WxH>        override the viewBox (default fits --format)
+  --image <file>      source image for the "mask" kind (clip a screenshot into a shape)
+  --shape circle|rounded   mask shape (default circle)
+  --format <id>       size backgrounds/overlays to this format's canvas (default iphone)
+  --out <file>        write a .svg file; the layer/bg snippet then references the path
+  --data-url          print just the data: URL
+  --json              print { dataUrl, layer|bg, hint } ready to paste into a project
 
 global:
   --browser-path <p>  use an existing Chromium instead of Playwright's
@@ -120,6 +145,11 @@ async function loadProject(file) {
   try { raw = await readFile(file, 'utf8'); } catch { fail(`cannot read ${file}`, 2); }
   try { return JSON.parse(raw); } catch (e) { fail(`${file} is not valid JSON: ${e.message}`, 2); }
 }
+
+// Loads and expands the design system (tokens/styles/decorations) — the form
+// render and lint should see. Interactive commands (edit/watch) keep the raw
+// source; `shotpress resolve` bakes it for them.
+async function loadResolved(file) { return resolveProject(await loadProject(file)); }
 
 function parse(argv, extra = {}) {
   try {
@@ -160,6 +190,8 @@ function parseUnsafe(argv, extra = {}) {
       patches: { type: 'string' },
       render: { type: 'boolean', default: false },
       rtl: { type: 'boolean', default: false },
+      contact: { type: 'boolean', default: false },
+      fonts: { type: 'string' },
       fastlane: { type: 'boolean', default: false },
       locale: { type: 'string', default: 'en-US' },
       'accept-apple-terms': { type: 'boolean', default: false },
@@ -174,6 +206,17 @@ function parseUnsafe(argv, extra = {}) {
       measure: { type: 'boolean', default: false },
       honest: { type: 'boolean', default: false },
       'no-social': { type: 'boolean', default: false },
+      color: { type: 'string' },
+      color2: { type: 'string' },
+      seed: { type: 'string' },
+      opacity: { type: 'string' },
+      size: { type: 'string' },
+      image: { type: 'string' },
+      shape: { type: 'string' },
+      'data-url': { type: 'boolean', default: false },
+      'kitchen-sink': { type: 'boolean', default: false },
+      rules: { type: 'boolean', default: false },
+      markdown: { type: 'boolean', default: false },
       window: { type: 'boolean', default: false },
       'no-open': { type: 'boolean', default: false },
       help: { type: 'boolean', default: false },
@@ -224,7 +267,7 @@ function progress(quiet) {
 async function cmdRender(argv) {
   const { values: v, positionals } = parse(argv);
   const file = positionals[0];
-  const project = await loadProject(file);
+  const project = await loadResolved(file);
   const check = validateProject(project);
   if (!check.ok) fail(`invalid project: ${check.errors.map(e => `${e.path}: ${e.message}`).join('; ')}`, 1);
   checkType(v.type);
@@ -237,6 +280,8 @@ async function cmdRender(argv) {
     screens: parseScreens(v),
     name: v.name,
     rtl: v.rtl,
+    contact: v.contact,
+    fontsDir: v.fonts || null,
     browserPath: browserPathOf(v),
     baseDir: path.dirname(path.resolve(file)),
     onProgress: progress(v.json),
@@ -257,7 +302,7 @@ async function cmdRender(argv) {
 async function cmdRenderAll(argv) {
   const { values: v, positionals } = parse(argv);
   const file = positionals[0];
-  const project = await loadProject(file);
+  const project = await loadResolved(file);
   const check = validateProject(project);
   if (!check.ok) fail(`invalid project: ${check.errors.map(e => `${e.path}: ${e.message}`).join('; ')}`, 1);
   checkType(v.type);
@@ -283,6 +328,8 @@ async function cmdRenderAll(argv) {
           type: v.type,
           name: v.name,
           rtl: v.rtl,
+          contact: v.contact,
+          fontsDir: v.fonts || null,
           baseDir: path.dirname(path.resolve(file)),
           onProgress: progress(v.json),
         }, harness);
@@ -333,6 +380,15 @@ async function cmdNew(argv) {
   const { values: v } = parse(argv);
   const format = v.format || 'iphone';
   if (!FORMATS[format]) fail(`unknown format "${format}"`, 2);
+
+  if (v['kitchen-sink']) {
+    const introspected = await introspectLayers({ browserPath: browserPathOf(v), types: LAYER_TYPES, aliases: LAYER_ALIASES });
+    const ks = buildKitchenSink(introspected, format);
+    const out = JSON.stringify(ks, null, 2) + '\n';
+    if (v.out) { await writeFile(v.out, out); process.stderr.write(`wrote ${v.out}\n`); }
+    else process.stdout.write(out);
+    return;
+  }
 
   let screensN = null;
   if (v.screens != null) {
@@ -388,7 +444,7 @@ async function cmdNew(argv) {
 
 async function cmdValidate(argv) {
   const { positionals } = parse(argv);
-  const project = await loadProject(positionals[0]);
+  const project = await loadResolved(positionals[0]);
   const result = validateProject(project);
   process.stdout.write(JSON.stringify(result, null, 2) + '\n');
   if (!result.ok) process.exit(1);
@@ -413,7 +469,8 @@ function renderMeasure(m) {
 
 async function cmdLint(argv) {
   const { values: v, positionals } = parse(argv);
-  const project = await loadProject(positionals[0]);
+  if (v.rules) { process.stdout.write(JSON.stringify(LINT_RULES, null, 2) + '\n'); return; }
+  const project = await loadResolved(positionals[0]);
   const result = lintProject(project);
   if (v.sketch) process.stdout.write(sketchProject(project) + '\n\n');
   if (v.measure && !v.json) process.stdout.write(renderMeasure(measureProject(project)) + '\n\n');
@@ -428,7 +485,7 @@ async function cmdLint(argv) {
 
 async function cmdVariants(argv) {
   const { values: v, positionals } = parse(argv);
-  const base = await loadProject(positionals[0]);
+  const base = await loadResolved(positionals[0]);
   const check = validateProject(base);
   if (!check.ok) fail(`invalid base project: ${check.errors.map(e => `${e.path}: ${e.message}`).join('; ')}`, 1);
   if (!v.patches) fail('variants needs --patches <file>', 2);
@@ -492,7 +549,59 @@ try {
       break;
     }
     case 'formats': process.stdout.write(JSON.stringify(formatList(), null, 2) + '\n'); break;
+    case 'schema': {
+      const { values: v } = parse(rest);
+      const introspected = await introspectLayers({ browserPath: browserPathOf(v), types: LAYER_TYPES, aliases: LAYER_ALIASES });
+      const schema = buildSchema(introspected);
+      process.stdout.write(v.markdown ? schemaMarkdown(schema) : JSON.stringify(schema, null, 2) + '\n');
+      break;
+    }
+    case 'pose': process.stdout.write(JSON.stringify(POSES, null, 2) + '\n'); break;
+    case 'decor': {
+      const { values: v, positionals } = parse(rest);
+      const kind = positionals[0];
+      if (!kind) { process.stdout.write(JSON.stringify(decorKinds(), null, 2) + '\n'); break; }
+      let imageData = null;
+      if (v.image) {
+        let buf;
+        try { buf = await readFile(v.image); } catch { fail(`cannot read --image ${v.image}`, 2); }
+        const mime = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp' }[path.extname(v.image).toLowerCase()] || 'image/png';
+        imageData = `data:${mime};base64,` + buf.toString('base64');
+      }
+      let result;
+      try {
+        result = makeDecor(kind, {
+          color: v.color || '#6d5cf5',
+          color2: v.color2 || null,
+          seed: v.seed != null ? Number(v.seed) : 1,
+          opacity: v.opacity != null ? Number(v.opacity) : null,
+          size: v.size || null,
+          format: v.format || 'iphone',
+          image: imageData,
+          shape: v.shape || 'circle',
+        });
+      } catch (e) { fail(e.message, 2); }
+      if (v.out) {
+        await writeFile(v.out, result.svg);
+        process.stderr.write(`wrote ${v.out}\n`);
+        // reference the file, not an inline data URL, so the project stays lean
+        if (result.layer) result.layer.src = v.out;
+        if (result.bg) result.bg.image = v.out;
+        if (v.json) { const { svg, dataUrl, ...rest2 } = result; process.stdout.write(JSON.stringify({ ...rest2, path: v.out }, null, 2) + '\n'); }
+      } else if (v.json) process.stdout.write(JSON.stringify(result, null, 2) + '\n');
+      else if (v['data-url']) process.stdout.write(result.dataUrl + '\n');
+      else process.stdout.write(result.svg + '\n');
+      break;
+    }
     case 'validate': await cmdValidate(rest); break;
+    case 'resolve': {
+      const { values: v, positionals } = parse(rest);
+      const resolved = resolveProject(await loadProject(positionals[0]));
+      const out = JSON.stringify(resolved, null, 2) + '\n';
+      if (v.out) { await writeFile(v.out, out); process.stderr.write(`wrote ${v.out}\n`); }
+      else process.stdout.write(out);
+      break;
+    }
     case 'lint': await cmdLint(rest); break;
     case 'variants': await cmdVariants(rest); break;
     case 'edit': {

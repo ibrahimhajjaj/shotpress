@@ -59,6 +59,30 @@ If you find yourself typing a fourth size, you're adding noise, not hierarchy.
 - Text-on-background contrast ≥4.5:1 wherever there's no scrim. Gradients:
   check against the lightest stop behind the text.
 
+## Depth and texture (restraint first)
+
+Whitespace is an asset, not a gap to fill. A flat background with one soft light
+source and a hint of grain reads more premium than a canvas busy with shapes.
+The failure mode is decoration for its own sake — that's the generic-template
+look. So: at most one background motif per set, always behind the content, low
+contrast, on-brand.
+
+Two ways to add depth, both rendered by the real browser at export:
+
+- **CSS in `bg.value`** for soft, cheap depth: a `radial-gradient` glow, layered
+  radials for an orb, a mesh of colour stops. Reach here first.
+- **`shotpress decor <kind>`** when you need organic edges CSS can't do — an
+  aurora `mesh` background, `grain`/noise overlay, a soft `glow` behind the
+  device, a `blob`, `rings`, or `waves`. It emits a self-contained SVG (blur,
+  gradient fill, and grain baked in) plus a paste-ready `bg` or image-`layer`
+  snippet. `--seed` keeps a whole set on one visual family; `--color` ties it to
+  the accent. Run `shotpress decor` with no kind to see them.
+
+Keep decoration under the headline and behind the device, never over text, and
+low enough in opacity that it's felt, not read. A little `grain` over a flat
+dark ground is the single highest-signal move; a full-canvas `mesh` replaces a
+flat background with soft colour fields. Don't stack more than one or two.
+
 ## Layout numbers (360×780 canvas — scale for others)
 
 - Side margins: nothing within 16px of the edges; text `width` ≤312.

@@ -1,5 +1,5 @@
 import http from 'node:http';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -126,7 +126,23 @@ export async function launchHarness({ browserPath = null, headed = false } = {})
 
 // One context per render pass: deviceScaleFactor is context-scoped, and a fresh
 // context guarantees no state bleeds between formats.
-export async function openEngine(harness, { deviceScaleFactor = 1, viewport = { width: 1100, height: 1000 } } = {}) {
+// Embeds a directory of font files as @font-face rules, so a project can name a
+// custom display face and render it offline (family = the file's base name).
+const FONT_FORMAT = { '.woff2': ['woff2', 'font/woff2'], '.woff': ['woff', 'font/woff'], '.otf': ['opentype', 'font/otf'], '.ttf': ['truetype', 'font/ttf'] };
+async function injectUserFonts(page, dir) {
+  let files;
+  try { files = (await readdir(dir)).filter(f => FONT_FORMAT[path.extname(f).toLowerCase()]); }
+  catch { throw new Error(`--fonts: cannot read directory ${dir}`); }
+  const faces = [];
+  for (const f of files) {
+    const [fmt, mime] = FONT_FORMAT[path.extname(f).toLowerCase()];
+    const buf = await readFile(path.join(dir, f));
+    faces.push(`@font-face{font-family:'${path.basename(f, path.extname(f))}';src:url(data:${mime};base64,${buf.toString('base64')}) format('${fmt}');font-display:block;}`);
+  }
+  if (faces.length) await page.addStyleTag({ content: faces.join('\n') });
+}
+
+export async function openEngine(harness, { deviceScaleFactor = 1, viewport = { width: 1100, height: 1000 }, fontsDir = null } = {}) {
   const context = await harness.browser.newContext({
     viewport,
     deviceScaleFactor,
@@ -174,6 +190,7 @@ export async function openEngine(harness, { deviceScaleFactor = 1, viewport = { 
   await page.goto(harness.url + ENGINE_PAGE, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('[data-screen-idx]', { timeout: 30_000 });
   await page.waitForFunction(GET_INSTANCE + ' !== null', { timeout: 30_000 });
+  if (fontsDir) await injectUserFonts(page, fontsDir);
   // kill transitions so screenshots never catch an in-flight animation
   await page.addStyleTag({ content: '*{transition:none!important;animation:none!important;}' });
   return { context, page };
@@ -299,6 +316,38 @@ export async function reflowProject(project, format, { browserPath = null } = {}
         };
         poll();
       }), format);
+    } finally {
+      await context.close();
+    }
+  } finally {
+    await harness.close();
+  }
+}
+
+// Reads every layer type's real default fields straight from the engine's own
+// addLayer() (the authoritative source), so `schema`/`--kitchen-sink` can never
+// drift from what the editor produces. Returns { type: { type, fields } } plus
+// the alias presets (heading/circle/line).
+export async function introspectLayers({ browserPath = null, types, aliases }) {
+  const harness = await launchHarness({ browserPath });
+  try {
+    const { context, page } = await openEngine(harness);
+    try {
+      return await evalOnInstance(page, async (inst, args) => {
+        const drop = new Set(['id', 'cx', 'cy', 'type']);
+        const added = [...args.types, ...Object.keys(args.aliases)].map(t => ({ t, id: inst.addLayer(t, 100, 100) }));
+        await new Promise(r => setTimeout(r, 0)); // let the state flush
+        const layers = inst.state.screens[inst.state.selected].layers;
+        const out = {};
+        for (const { t, id } of added) {
+          const layer = layers.find(l => l.id === id);
+          if (!layer) continue;
+          const fields = {};
+          for (const [k, v] of Object.entries(layer)) if (!drop.has(k)) fields[k] = v;
+          out[t] = { type: layer.type, fields };
+        }
+        return out;
+      }, { types, aliases });
     } finally {
       await context.close();
     }
