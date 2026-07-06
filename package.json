@@ -1,6 +1,6 @@
 {
   "name": "shotpress",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "App Store / Google Play screenshot builder — render store-ready screenshot sets from a JSON spec",
   "license": "PolyForm-Noncommercial-1.0.0",
   "repository": {
