@@ -75,6 +75,37 @@ function deviceBox(l, fmt) {
   return { top: l.cy - h / 2, bottom: l.cy + h / 2, left: l.cx - w / 2, right: l.cx + w / 2 };
 }
 
+// First pair of text layers whose estimated boxes collide, or null. A few px of
+// slop is tolerated so two adjacent lines that merely touch don't trip it; a
+// headline that wraps into the copy below clears it comfortably.
+function textOverlap(layers) {
+  const boxes = layers.filter(l => l.type === 'text').map(textBox);
+  for (let a = 0; a < boxes.length; a++) {
+    for (let b = a + 1; b < boxes.length; b++) {
+      const A = boxes[a], B = boxes[b];
+      const ox = Math.min(A.right, B.right) - Math.max(A.left, B.left);
+      const oy = Math.min(A.bottom, B.bottom) - Math.max(A.top, B.top);
+      if (ox > 4 && oy > 4) return { ox, oy };
+    }
+  }
+  return null;
+}
+
+// Font family a text layer resolves to, for optical (not raw-px) comparisons.
+const familyOf = (l) => {
+  const m = typeof l.font === 'string' && l.font.match(/'([^']+)'/);
+  return m ? m[1] : 'default';
+};
+
+// An eyebrow/kicker: an explicit role, or a short all-caps label. It rides above
+// a headline as a category marker, not body copy, so the legibility floor eases.
+const EYEBROW_ROLES = new Set(['eyebrow', 'kicker', 'label']);
+const isEyebrow = (l) => {
+  if (EYEBROW_ROLES.has(l.role)) return true;
+  const t = String(l.text || '').replace(/[*~]/g, '').trim();
+  return words(t).length <= 3 && /[A-Za-z]/.test(t) && t === t.toUpperCase();
+};
+
 const SKETCH_MARK = { text: 'T', device: 'D', rating: 'R', badge: 'B', callout: 'C', feature: 'F', image: 'I', logo: 'L', shape: 'S', icon: 'i' };
 
 // ASCII map of layer boxes per screen, so positions can be sanity-checked
@@ -142,22 +173,39 @@ export function lintProject(project) {
   }
 
   // TYPE_SCALE_NOISE — a set should use ~3 sizes, not a smear
-  const sizes = [...new Set(screens.flatMap(s => (s.layers || []).filter(l => l.type === 'text').map(l => l.fontSize || 0)))].sort((a, b) => a - b);
+  const textLayers = screens.flatMap(s => (s.layers || []).filter(l => l.type === 'text'));
+  const sizes = [...new Set(textLayers.map(l => l.fontSize || 0))].sort((a, b) => a - b);
   if (sizes.length > 4) {
     add('TYPE_SCALE_NOISE', null, `${sizes.length} distinct font sizes (${sizes.join(', ')}) ; snap to a 3-tier scale (hero/headline/body)`);
   }
-  for (let i = 1; i < sizes.length; i++) {
-    if (sizes[i] - sizes[i - 1] <= 2 && sizes[i - 1] >= 12) {
-      add('TYPE_SCALE_NOISE', null, `font sizes ${sizes[i - 1]} and ${sizes[i]} differ by ≤2px, so make them the same size`);
-      break;
+  // Near-duplicate sizes read as noise, but only within one family: optical size
+  // differs by typeface (Instrument Serif at 46 looks smaller than Manrope at
+  // 46), so two faces sharing a px is a deliberate pairing, not a smear.
+  const sizesByFamily = new Map();
+  for (const l of textLayers) {
+    const fam = familyOf(l);
+    (sizesByFamily.get(fam) || sizesByFamily.set(fam, new Set()).get(fam)).add(l.fontSize || 0);
+  }
+  for (const [fam, set] of sizesByFamily) {
+    const fs = [...set].sort((a, b) => a - b);
+    for (let i = 1; i < fs.length; i++) {
+      if (fs[i] - fs[i - 1] <= 2 && fs[i - 1] >= 12) {
+        add('TYPE_SCALE_NOISE', null, `${fam} sizes ${fs[i - 1]} and ${fs[i]} differ by ≤2px — make them one size (px equality within a family, not across)`);
+        break;
+      }
     }
   }
 
-  // BODY_TOO_SMALL — legibility floor on the real-pixel output
+  // BODY_TOO_SMALL — legibility floor on the real-pixel output. A short all-caps
+  // kicker, or a layer tagged role:"eyebrow"/"kicker"/"label", is an editorial
+  // device rather than body copy a thumbnail-scroller must read, so it earns a
+  // relaxed floor instead of the full 60 (still caught if it goes truly tiny).
   for (const [i, s] of screens.entries()) {
     for (const l of (s.layers || []).filter(l => l.type === 'text')) {
-      if ((l.fontSize || 0) * realScale < 60 && (l.fontSize || 0) > 0) {
-        add('BODY_TOO_SMALL', i + 1, `text renders at ${Math.round((l.fontSize || 0) * realScale)}px real (<60px floor); thumbs scroll past what they can't read`);
+      const real = (l.fontSize || 0) * realScale;
+      const floor = isEyebrow(l) ? 40 : 60;
+      if (real < floor && (l.fontSize || 0) > 0) {
+        add('BODY_TOO_SMALL', i + 1, `text renders at ${Math.round(real)}px real (<${floor}px floor); thumbs scroll past what they can't read`);
         break;
       }
     }
@@ -222,14 +270,19 @@ export function lintProject(project) {
     }
   }
 
-  // ALIGNMENT_DRIFT — near-equal headline anchors that don't quite line up
+  // ALIGNMENT_DRIFT — near-equal headline anchors that don't quite line up.
+  // A drift of exactly 8px passes (the deliberate-move threshold is ≥8, so 8 is
+  // reachable). Screens that declare a different layout family — via a
+  // `layoutFamily` tag or simply a different hero text alignment — are skipped,
+  // since a centered hook and a left-column feature aren't meant to share a line.
+  const familyOfScreen = (s, hero) => s.layoutFamily || (hero && hero.align) || 'default';
   for (let i = 1; i < screens.length; i++) {
     const a = headlinesOf(screens[i - 1])[0];
     const b = headlinesOf(screens[i])[0];
-    if (a && b) {
+    if (a && b && familyOfScreen(screens[i - 1], a) === familyOfScreen(screens[i], b)) {
       const d = Math.abs(a.cy - b.cy);
-      if (d > 0 && d <= 8) {
-        add('ALIGNMENT_DRIFT', i + 1, `headline anchor drifts ${d}px from the previous screen — align exactly or move deliberately (>8px)`);
+      if (d > 0 && d < 8) {
+        add('ALIGNMENT_DRIFT', i + 1, `headline anchor drifts ${d}px from the previous screen — align it exactly, or move it clearly (≥8px)`);
       }
     }
   }
@@ -255,6 +308,13 @@ export function lintProject(project) {
   for (const [i, s] of screens.entries()) {
     const layers = s.layers || [];
     const devices = layers.filter(l => l.type === 'device');
+    // TEXT_OVERLAP — a headline that wraps into the copy below it (or any two
+    // text boxes that collide). Invisible to geometry-only checks; this is the
+    // text-layout result that used to only surface on the rendered PNG.
+    const ov = textOverlap(layers);
+    if (ov) {
+      add('TEXT_OVERLAP', i + 1, `two text layers overlap (~${Math.round(ov.ox)}×${Math.round(ov.oy)}px) — a headline is likely wrapping into copy below it; shorten it, widen its box, or move one`);
+    }
     for (const l of layers.filter(l => l.type === 'text')) {
       const box = textBox(l);
       if (box.left < margin || box.right > W - margin) {
@@ -290,4 +350,35 @@ export function lintProject(project) {
   }
 
   return { findings, count: findings.length };
+}
+
+// Per-layer computed geometry — the same estimates the lint reasons about — so
+// an agent can see that a headline wrapped to N lines, or where a device's box
+// lands, WITHOUT rendering the PNG and measuring it. These are estimates, not a
+// raster measurement (see textLines); the device box matches the engine's frame
+// table exactly, text boxes assume ~0.55em advance.
+export function measureProject(project) {
+  const fmt = FORMATS[project.format] || FORMATS.iphone;
+  const realScale = fmt.realW / fmt.w;
+  const r = (n) => Math.round(n * 10) / 10;
+  const boxOut = (b) => ({ x: r(b.left), y: r(b.top), w: r(b.right - b.left), h: r(b.bottom - b.top) });
+  return {
+    format: project.format,
+    design: { w: fmt.w, h: fmt.h },
+    real: { w: fmt.realW, h: fmt.realH },
+    realScale: Math.round(realScale * 100) / 100,
+    screens: (project.screens || []).map((s, i) => ({
+      screen: i + 1,
+      layers: (s.layers || []).map((l) => {
+        const base = { id: l.id, type: l.type, cx: l.cx, cy: l.cy };
+        if (l.type === 'text') {
+          return { ...base, text: String(l.text || ''), fontSize: l.fontSize || 0, realPx: Math.round((l.fontSize || 0) * realScale), lines: textLines(l), box: boxOut(textBox(l)) };
+        }
+        if (l.type === 'device') {
+          return { ...base, kind: l.kind, scale: l.scale || 1, treatment: l.treatment || 'plain', box: boxOut(deviceBox(l, fmt)) };
+        }
+        return base;
+      }),
+    })),
+  };
 }

@@ -309,7 +309,7 @@ export async function reflowProject(project, format, { browserPath = null } = {}
 
 // Builds a fresh project through the engine's own pack/screen builders,
 // so `shotpress new` output is exactly what the editor would produce.
-export async function buildProject({ pack = null, format = 'iphone', appName = null, accent = null, screens = 3, browserPath = null }) {
+export async function buildProject({ pack = null, format = 'iphone', appName = null, accent = null, screens = null, browserPath = null }) {
   const harness = await launchHarness({ browserPath });
   try {
     const { context, page } = await openEngine(harness);
@@ -325,8 +325,9 @@ export async function buildProject({ pack = null, format = 'iphone', appName = n
           if (args.pack) {
             next = inst.buildPackScreens(args.pack, f);
             if (!next.length) return reject(new Error('unknown pack ' + args.pack));
+            if (args.screens != null) next = next.slice(0, Math.max(1, args.screens));
           } else {
-            next = Array.from({ length: Math.max(1, args.screens) }, () => inst.newScreen(f, {}));
+            next = Array.from({ length: Math.max(1, args.screens ?? 3) }, () => inst.newScreen(f, {}));
           }
           inst.setState({ screens: next, selected: 0, onboard: false }, () => {
             resolve(JSON.parse(inst.saveJson()));

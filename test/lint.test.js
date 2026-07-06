@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { lintProject } from '../src/lint.js';
+import { lintProject, measureProject } from '../src/lint.js';
 
 const text = (over = {}) => ({
   id: 'u_t', type: 'text', cx: 180, cy: 100, scale: 1, rot: 0,
@@ -77,6 +77,51 @@ test('flags placeholder social proof and double status bars', () => {
   assert.ok(found.has('DOUBLE_STATUS_BAR'));
   const clean = project([screen([device({ image: 'shot.png', showStatus: false })])]);
   assert.ok(!rules(clean).has('DOUBLE_STATUS_BAR'));
+});
+
+test('flags two text layers whose boxes collide', () => {
+  const overlap = project([screen([text({ cy: 100 }), text({ cy: 110, text: 'Second line of copy' })])]);
+  assert.ok(rules(overlap).has('TEXT_OVERLAP'));
+  const spaced = project([screen([text({ cy: 100 }), text({ cy: 420, text: 'Second line of copy' })])]);
+  assert.ok(!rules(spaced).has('TEXT_OVERLAP'));
+});
+
+test('near-equal sizes flag within a family but not across families', () => {
+  const same = project([screen([text({ cy: 100, fontSize: 46 }), text({ cy: 420, fontSize: 45 })])]);
+  assert.ok(rules(same).has('TYPE_SCALE_NOISE'));
+  const cross = project([screen([
+    text({ cy: 100, fontSize: 46, font: "'Space Grotesk', sans-serif" }),
+    text({ cy: 420, fontSize: 45, font: "'Instrument Serif', serif" }),
+  ])]);
+  assert.ok(!rules(cross).has('TYPE_SCALE_NOISE'));
+});
+
+test('alignment drift: 8px passes, 5px flags, different families skip', () => {
+  const at8 = project([screen([text({ cy: 100 })]), screen([text({ cy: 108 })])]);
+  assert.ok(!rules(at8).has('ALIGNMENT_DRIFT'));
+  const at5 = project([screen([text({ cy: 100 })]), screen([text({ cy: 105 })])]);
+  assert.ok(rules(at5).has('ALIGNMENT_DRIFT'));
+  const diffFamily = project([screen([text({ cy: 100, align: 'center' })]), screen([text({ cy: 105, align: 'left' })])]);
+  assert.ok(!rules(diffFamily).has('ALIGNMENT_DRIFT'));
+});
+
+test('legibility floor eases for a short all-caps or tagged eyebrow', () => {
+  const caps = project([screen([text({ fontSize: 13, text: 'NEW' })])]);
+  assert.ok(!rules(caps).has('BODY_TOO_SMALL'));
+  const tagged = project([screen([text({ fontSize: 13, text: 'introducing', role: 'eyebrow' })])]);
+  assert.ok(!rules(tagged).has('BODY_TOO_SMALL'));
+  const tiny = project([screen([text({ fontSize: 8, text: 'NEW' })])]);
+  assert.ok(rules(tiny).has('BODY_TOO_SMALL'));
+});
+
+test('measure reports wrapped line count and device box', () => {
+  const p = project([screen([text({ fontSize: 40, width: 100, text: 'a long headline that must wrap several times' }), device()])]);
+  const m = measureProject(p);
+  const t = m.screens[0].layers.find(l => l.type === 'text');
+  const d = m.screens[0].layers.find(l => l.type === 'device');
+  assert.ok(t.lines > 1, `expected wrap, got ${t.lines} lines`);
+  assert.equal(t.realPx, Math.round(40 * 1290 / 360)); // iphone realW/w
+  assert.ok(d.box.w > 0 && d.box.h > 0);
 });
 
 test('flags an official bezel on the wrong canvas', () => {

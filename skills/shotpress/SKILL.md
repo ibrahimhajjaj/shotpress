@@ -30,6 +30,10 @@ npx shotpress new --pack secure --format iphone --app-name "MyApp" --accent "#6d
 ```
 
 Without `--pack` you get `--screens <n>` blank screens to compose manually.
+`--screens <n>` also trims a pack to its first N screens (packs otherwise emit
+10). For a pre-launch app add `--honest`: it omits the pack's demo rating and
+quote layers so fabricated social proof can never slip through — supply real
+numbers later, or a truthful badge, instead.
 
 2b. **Capture the real app.** Three ingestion paths; pick by what's running:
 
@@ -83,9 +87,17 @@ device layers or the synthetic (iOS-styled) bar doubles it — lint flags this.
 - Device layers: `kind` (phone/tablet/mac/watch), `bezel` (black/white/clay),
   `notch` (auto/island/notch/punch/none), `treatment` (plain/bleed/angled/
   compare/duo/pano/multi), and `rx3d`/`ry3d` for a 3D perspective pose.
+- `bleed` fills the whole canvas with the screenshot, which means it zooms in
+  and crops the screenshot's own edges (the default scale is high by design).
+  Use it only for captures whose edges are safe to lose — full-bleed imagery,
+  not a UI screen with text or controls near the border, which gets sliced.
+  `device.accent` also paints a visible frame edge under `bleed` (it doesn't on
+  plain/angled), so leave it unset there unless you want that band.
 - Positions (`cx`/`cy`) are design-space px for the project's format (e.g.
   iPhone is a 360×780 canvas). Don't hand-convert between formats — rendering
-  with `--format` reflows automatically.
+  with `--format` reflows automatically. `lint --measure` prints each layer's
+  computed line-count and bounding box (and each device's box) so you can catch
+  a headline that wraps into the copy below it BEFORE rendering.
 
 4. **Design like a system, not a template.** Read DESIGN.md in this skill
 directory before rewriting copy or composition — it's the doctrine that
@@ -96,15 +108,20 @@ formulas, treatment schedule), and every rule is numeric.
 
 ```bash
 npx shotpress lint project.json --sketch   # ascii map of layer positions
+npx shotpress lint project.json --measure  # line-count + bbox per layer, no render
 npx shotpress lint project.json --json     # numeric design critique
 npx shotpress validate project.json
 npx shotpress render project.json --out shots --json          # one format
 ```
 
-Fix lint findings, then render one format and actually look at the PNGs — full
-size for collisions and promise-clarity, and downscaled to ~120px for
-thumbnail legibility (screens 1–3 must read at search-result size). Iterate
-until clean, then:
+`lint` catches text-over-text and text-over-device collisions, the type scale
+(compared optically per font family, so a serif and a sans can share a px),
+contrast, safe zones and composition rhythm. `--measure` is the fast pre-render
+check: it reports the same computed geometry lint reasons about, so an agent can
+see a headline wrapped to 3 lines without opening the PNG. Then render one
+format and actually look at the PNGs — full size for promise-clarity, and
+downscaled to ~120px for thumbnail legibility (screens 1–3 must read at
+search-result size). Iterate until clean, then:
 
 ```bash
 npx shotpress render-all project.json --stores appstore,play --zip --json
@@ -154,6 +171,14 @@ Notes: the file is the single source of truth; the board is fully self-contained
 uses a dedicated Chromium window instead of the default browser (CI / no
 browser); `--no-open` just prints the URL (remote/SSH).
 
+While the board is open it owns the file's on-disk format: a human drag writes
+the whole file back via `JSON.stringify(…, null, 2)`. So if you keep editing the
+same file alongside the board, read-modify-**write the whole file** (parse JSON,
+change it, write it back), don't apply exact-string patches — a reformat from
+the board would break a string match mid-session. The board only writes on a
+browser-origin change and skips no-op saves, so your own edits alone don't churn
+the file.
+
 ## Notes
 
 - Browser resolution: Playwright's cached Chromium, then system Google Chrome.
@@ -164,3 +189,16 @@ browser); `--no-open` just prints the URL (remote/SSH).
 - Android phone output is 1080×2160 (the design's 1:2 aspect); Play accepts it.
   All other formats come out store-exact (e.g. 1290×2796 for iPhone 6.9″).
 - Templates for all 9 packs live in `templates/` as starting points.
+- Fonts: four families ship vendored and render offline (Space Grotesk, Manrope,
+  Instrument Serif, Cairo for Arabic). Any other Google Fonts family named in a
+  text layer's `font` loads from the network at render time; there's no offline
+  path for a custom `@font-face` today, so keep offline/CI renders to the
+  vendored four. The default pack face is Space Grotesk — swap it if you want a
+  more distinctive set.
+- A short all-caps kicker, or a text layer tagged `role: "eyebrow"` (or
+  `"kicker"`/`"label"`), gets a relaxed legibility floor, so a small caps label
+  above a headline is allowed where body copy that size would be flagged.
+- A `feature` layer's internal title/sub sizes are managed by the engine and sit
+  outside the type-scale check — use feature rows for benefit lists without them
+  counting against your 3-tier scale. Emoji render via a `feature.glyph` (the
+  headless browser falls back to the system emoji font).

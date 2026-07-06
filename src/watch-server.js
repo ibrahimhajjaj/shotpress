@@ -227,6 +227,11 @@ export async function watchServe(file, {
     }
   }
 
+  // Writes a browser-origin edit back to disk. The board owns the on-disk format
+  // here: 2-space `JSON.stringify`, same as the CLI's own writers, so an agent
+  // that read-modify-writes the whole file round-trips cleanly. The canon guard
+  // means a no-op save never rewrites the file, so an agent's own edits (which
+  // arrive via pullFile, not here) don't churn formatting on their own.
   async function pushSave(editorJson) {
     let parsed;
     try {

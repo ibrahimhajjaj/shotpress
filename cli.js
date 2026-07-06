@@ -11,7 +11,7 @@ import { discoverExternalPacks, loadPackFile } from './src/external-packs.js';
 import { fastlanePath } from './src/fastlane.js';
 import { installFrames, listFrames, APPLE_BEZELS, APPLE_TERMS_URL } from './src/frames.js';
 import { zipFiles, zipName } from './src/zip.js';
-import { lintProject, sketchProject } from './src/lint.js';
+import { lintProject, sketchProject, measureProject } from './src/lint.js';
 import { parseMasks } from './src/imgedit.js';
 import { captureRoutes } from './src/capture.js';
 import { simShot } from './src/simshot.js';
@@ -62,7 +62,8 @@ new options:
   --format <id>       default iphone
   --app-name <str>    brand.appName
   --accent <hex>      brand.accent
-  --screens <n>       blank screens when no --pack (default 3)
+  --screens <n>       how many screens (blank projects default 3; also trims a --pack to N)
+  --honest            omit the pack's demo rating/quote layers (--no-social alias)
   --out <file>        write to file instead of stdout
 
 capture options:
@@ -90,6 +91,7 @@ simshot options:
 
 lint options:
   --sketch            print an ascii map of layer positions per screen
+  --measure           print computed line-count and bbox per layer (no render)
   --strict            non-zero exit when findings exist
   --json              findings as JSON
 
@@ -169,6 +171,9 @@ function parseUnsafe(argv, extra = {}) {
       'crop-bottom': { type: 'string', default: '0' },
       mask: { type: 'string', multiple: true },
       sketch: { type: 'boolean', default: false },
+      measure: { type: 'boolean', default: false },
+      honest: { type: 'boolean', default: false },
+      'no-social': { type: 'boolean', default: false },
       window: { type: 'boolean', default: false },
       'no-open': { type: 'boolean', default: false },
       help: { type: 'boolean', default: false },
@@ -316,10 +321,24 @@ async function cmdRenderAll(argv) {
   else all.files.forEach(f => process.stdout.write(f.path + '\n'));
 }
 
+// Drops the demo rating/quote layers the packs ship (each tagged
+// placeholder:true) so an honest scaffold can't leak fabricated social proof.
+function stripPlaceholderProof(project) {
+  for (const s of project.screens || []) {
+    if (Array.isArray(s.layers)) s.layers = s.layers.filter(l => l.placeholder !== true);
+  }
+}
+
 async function cmdNew(argv) {
   const { values: v } = parse(argv);
   const format = v.format || 'iphone';
   if (!FORMATS[format]) fail(`unknown format "${format}"`, 2);
+
+  let screensN = null;
+  if (v.screens != null) {
+    screensN = Number(v.screens);
+    if (!Number.isInteger(screensN) || screensN < 1) fail(`--screens must be a positive integer (got "${v.screens}")`, 2);
+  }
 
   let project;
   if (!v.pack || PACKS[v.pack]) {
@@ -328,7 +347,7 @@ async function cmdNew(argv) {
       format,
       appName: v['app-name'] || null,
       accent: v.accent || null,
-      screens: v.screens ? Number(v.screens) : 3,
+      screens: screensN,
       browserPath: browserPathOf(v),
     });
   } else {
@@ -353,11 +372,17 @@ async function cmdNew(argv) {
     }
   }
 
+  // --screens on a pack keeps the first N screens (buildProject already trimmed
+  // builtin packs; this also covers community-pack templates). --honest/--no-social
+  // strips the demo rating/quote layers so fabricated proof can't ship.
+  if (screensN != null && Array.isArray(project.screens)) project.screens = project.screens.slice(0, screensN);
+  if (v.honest || v['no-social']) stripPlaceholderProof(project);
+
   const json = JSON.stringify(project, null, 2) + '\n';
   if (v.out) { await writeFile(v.out, json); process.stderr.write(`wrote ${v.out}\n`); }
   else process.stdout.write(json);
   if (JSON.stringify(project).includes('"placeholder":true')) {
-    process.stderr.write('note: pack copy includes demo ratings/quotes marked "placeholder" — lint flags them until you replace the content and drop the flag\n');
+    process.stderr.write('note: pack copy includes demo ratings/quotes marked "placeholder" — lint flags them until you replace the content and drop the flag (or scaffold with --honest to omit them)\n');
   }
 }
 
@@ -369,13 +394,32 @@ async function cmdValidate(argv) {
   if (!result.ok) process.exit(1);
 }
 
+function renderMeasure(m) {
+  const lines = [`${m.format}  ${m.design.w}×${m.design.h} design px  (real ${m.real.w}×${m.real.h}, scale ${m.realScale}×)`];
+  for (const s of m.screens) {
+    lines.push(`screen ${s.screen}:`);
+    for (const l of s.layers) {
+      if (l.type === 'text') {
+        lines.push(`  text    ${String(l.realPx).padStart(4)}px real  ${l.lines} line${l.lines === 1 ? ' ' : 's'}  box ${l.box.w}×${l.box.h} @ (${l.box.x},${l.box.y})  ${JSON.stringify(l.text.slice(0, 28))}`);
+      } else if (l.box) {
+        lines.push(`  ${l.type.padEnd(6)}  box ${l.box.w}×${l.box.h} @ (${l.box.x},${l.box.y})${l.scale ? `  scale ${l.scale}` : ''}`);
+      } else {
+        lines.push(`  ${l.type.padEnd(6)}  @ (${l.cx},${l.cy})`);
+      }
+    }
+  }
+  return lines.join('\n');
+}
+
 async function cmdLint(argv) {
   const { values: v, positionals } = parse(argv);
   const project = await loadProject(positionals[0]);
   const result = lintProject(project);
   if (v.sketch) process.stdout.write(sketchProject(project) + '\n\n');
-  if (v.json) process.stdout.write(JSON.stringify(result, null, 2) + '\n');
-  else if (!result.count) process.stdout.write('no findings\n');
+  if (v.measure && !v.json) process.stdout.write(renderMeasure(measureProject(project)) + '\n\n');
+  if (v.json) {
+    process.stdout.write(JSON.stringify(v.measure ? { ...result, measure: measureProject(project) } : result, null, 2) + '\n');
+  } else if (!result.count) process.stdout.write('no findings\n');
   else for (const f of result.findings) {
     process.stdout.write(`${f.screen ? `screen ${f.screen}` : 'set'}  ${f.rule}  ${f.message}\n`);
   }
