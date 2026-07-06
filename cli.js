@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 import { parseArgs } from 'node:util';
 import { readFile, writeFile, mkdir, copyFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
+
+const VERSION = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')).version;
 import { FORMATS, STORES, formatList } from './src/formats.js';
 import { PACKS, packList } from './src/packs.js';
 import { validateProject } from './src/schema.js';
@@ -48,6 +51,7 @@ Usage:
   shotpress watch <project.json>       live board in your browser; two-way file sync
   shotpress frames [install]           official Apple bezels (downloaded from Apple)
   shotpress doctor                     preflight: node, engine files, browser
+  shotpress --version                  print the installed version (-v)
 
 render options:
   --format <id>       ${Object.keys(FORMATS).join('|')} (default: project.format)
@@ -120,7 +124,7 @@ watch options:
   --no-open           print the URL instead of opening the browser (remote/SSH)
 
 decor options (run "shotpress decor" with no kind to list kinds + usage):
-  --color <hex>       primary colour (default #6d5cf5)
+  --color <hex>       primary colour, or --accent (default #6d5cf5)
   --color2 <hex>      second colour for gradients/mesh (default: a lighter --color)
   --seed <n>          deterministic variation, so a set shares one family (default 1)
   --opacity <0-1>     override the kind's default opacity
@@ -540,6 +544,9 @@ async function cmdCapture(argv) {
 
 const [cmd, ...rest] = process.argv.slice(2);
 try {
+  if (cmd === '--version' || cmd === '-v' || cmd === 'version') { process.stdout.write(VERSION + '\n'); process.exit(0); }
+  // `<command> --help` / `-h` prints the usage (not just the command's own output)
+  if (cmd && cmd !== 'help' && (rest.includes('--help') || rest.includes('-h'))) { process.stdout.write(USAGE); process.exit(0); }
   switch (cmd) {
     case 'render': await cmdRender(rest); break;
     case 'render-all': await cmdRenderAll(rest); break;
@@ -574,7 +581,7 @@ try {
       let result;
       try {
         result = makeDecor(kind, {
-          color: v.color || '#6d5cf5',
+          color: v.color || v.accent || '#6d5cf5',
           color2: v.color2 || null,
           seed: v.seed != null ? Number(v.seed) : 1,
           opacity: v.opacity != null ? Number(v.opacity) : null,

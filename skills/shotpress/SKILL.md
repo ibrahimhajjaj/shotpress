@@ -106,9 +106,10 @@ device layers or the synthetic (iOS-styled) bar doubles it — lint flags this.
   SVG art (aurora `mesh` background, `grain` overlay, `glow`/`blob`/`rings`/`waves`
   behind content, and `mask --image <shot> --shape circle|rounded` to clip a
   screenshot into an avatar bubble or a magnified-detail callout). It prints a
-  paste-ready `bg` or image-`layer` snippet with `--json`. Run `shotpress decor`
-  with no kind to list them. Use with restraint (see DESIGN.md "Depth and
-  texture") — one motif, behind content, low opacity.
+  paste-ready `bg` or image-`layer` snippet with `--json`. Pass `--accent <hex>`
+  (or `--color`) to tie it to the brand, else it comes out the default purple.
+  Run `shotpress decor` with no kind to list them. Use with restraint (see
+  DESIGN.md "Depth and texture") — one motif, behind content, low opacity.
 - `bg.pattern` overlays a subtle texture on any background: `none` | `dots` |
   `grid` | `lines`. Official Apple bezels (more premium than the synthetic frame)
   come from `shotpress frames install --accept-apple-terms`, then set a device

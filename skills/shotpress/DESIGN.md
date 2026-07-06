@@ -80,8 +80,9 @@ Two ways to add depth, both rendered by the real browser at export:
   aurora `mesh` background, `grain`/noise overlay, a soft `glow` behind the
   device, a `blob`, `rings`, or `waves`. It emits a self-contained SVG (blur,
   gradient fill, and grain baked in) plus a paste-ready `bg` or image-`layer`
-  snippet. `--seed` keeps a whole set on one visual family; `--color` ties it to
-  the accent. Run `shotpress decor` with no kind to see them.
+  snippet. `--seed` keeps a whole set on one visual family; `--accent` (alias
+  `--color`) ties it to the brand — pass it, or the art comes out the default
+  purple. Run `shotpress decor` with no kind to see them.
 
 Keep decoration under the headline and behind the device, never over text, and
 low enough in opacity that it's felt, not read. A little `grain` over a flat
