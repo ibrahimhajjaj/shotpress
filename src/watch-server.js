@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { GET_INSTANCE } from './harness.js';
 import { restorePaths, collectPathMap } from './edit.js';
 import { inlineImages, renderProject } from './render.js';
+import { resolveProject } from './resolve.js';
 
 const ENGINE_DIR = fileURLToPath(new URL('./engine/', import.meta.url));
 const FONTS_DIR = fileURLToPath(new URL('./fonts/', import.meta.url));
@@ -209,7 +210,9 @@ export async function watchServe(file, {
   async function pullFile({ count = true } = {}) {
     let parsed;
     try {
-      parsed = JSON.parse(await readFile(file, 'utf8'));
+      // expand the design system so the board renders it; baseline compares the
+      // resolved form both ways, so an agent editing tokens/components doesn't churn
+      parsed = resolveProject(JSON.parse(await readFile(file, 'utf8')));
     } catch {
       return; // mid-write / briefly absent — retry next tick
     }

@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { launchHarness, openEngine, injectProject, ensureFonts, usedFamilies, evalOnInstance } from './harness.js';
 import { inlineImages } from './render.js';
+import { resolveProject } from './resolve.js';
 
 // Lays every screen out on the board so the whole set is visible at once, then
 // keeps it there across re-injections.
@@ -34,7 +35,7 @@ export async function watchProject(file, {
 } = {}) {
   const baseDir = path.dirname(path.resolve(file));
   const firstRaw = await readFile(file, 'utf8');
-  const first = JSON.parse(firstRaw);
+  const first = resolveProject(JSON.parse(firstRaw));
 
   const harness = await launchHarness({ browserPath, headed: true });
   try {
@@ -61,7 +62,7 @@ export async function watchProject(file, {
 
       let project;
       try {
-        project = JSON.parse(raw);
+        project = resolveProject(JSON.parse(raw));
       } catch {
         continue; // mid-write / partial JSON — wait for the next complete save
       }

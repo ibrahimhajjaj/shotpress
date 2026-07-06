@@ -71,6 +71,11 @@ Two ways to add depth, both rendered by the real browser at export:
 
 - **CSS in `bg.value`** for soft, cheap depth: a `radial-gradient` glow, layered
   radials for an orb, a mesh of colour stops. Reach here first.
+- **Native layer depth** for solid shapes and the device: a `shape`/`icon`/`device`
+  takes `shadow`, `glow` (a coloured halo — a `device.glow` lifts the phone off a
+  dark ground), and `blur`; a `shape.fill` takes a gradient; any layer takes
+  `blend` (use `"screen"` so a glow reads as light). Reach here for lit cards,
+  orbs, and the device halo.
 - **`shotpress decor <kind>`** when you need organic edges CSS can't do — an
   aurora `mesh` background, `grain`/noise overlay, a soft `glow` behind the
   device, a `blob`, `rings`, or `waves`. It emits a self-contained SVG (blur,

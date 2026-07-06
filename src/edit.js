@@ -2,6 +2,7 @@ import { readFile, writeFile, rename } from 'node:fs/promises';
 import path from 'node:path';
 import { launchHarness, openEngine, injectProject, evalOnInstance } from './harness.js';
 import { inlineImages } from './render.js';
+import { resolveProject } from './resolve.js';
 
 // Local image paths are inlined so the editor displays them; on save the exact
 // data URLs are swapped back so the file on disk keeps clean path references.
@@ -34,7 +35,9 @@ async function writeAtomic(file, content) {
 // Opens the visual editor on a project file and streams edits back to disk.
 // Resolves when the user closes the browser window.
 export async function editProject(file, { browserPath = null, headed = true, pollMs = 800, onSave = () => {}, onReady = null } = {}) {
-  const original = JSON.parse(await readFile(file, 'utf8'));
+  // expand any design system (tokens/styles/decorations/components/pose) so the
+  // board can show and save it; saves write the baked, concrete layers back
+  const original = resolveProject(JSON.parse(await readFile(file, 'utf8')));
   const inlined = await inlineImages(original, path.dirname(path.resolve(file)));
   const pathMap = collectPathMap(original, inlined);
 

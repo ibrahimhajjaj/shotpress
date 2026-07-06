@@ -6,6 +6,8 @@
 // existing specs are untouched. The engine never sees these keys — it only ever
 // gets the fully-resolved layers, so nothing new is asked of the frozen editor.
 
+import { COMPONENTS } from './components.js';
+
 // Tasteful named 3D poses so a device gets a considered tilt without blind
 // trial on raw rx3d/ry3d angles (pitch/yaw in degrees). `shotpress pose` lists them.
 export const POSES = {
@@ -19,8 +21,10 @@ export const POSES = {
 
 export function resolveProject(project) {
   if (!project || typeof project !== 'object') return project;
-  const hasPose = (project.screens || []).some(s => (s.layers || []).some(l => l && l.pose));
-  if (!project.tokens && !project.styles && !(project.decorations && project.decorations.length) && !hasPose) return project;
+  const scan = (pred) => (project.screens || []).some(s => (s.layers || []).some(l => l && pred(l)));
+  const hasPose = scan(l => l.pose);
+  const hasComponent = scan(l => l.component);
+  if (!project.tokens && !project.styles && !(project.decorations && project.decorations.length) && !hasPose && !hasComponent) return project;
 
   const p = structuredClone(project);
   const tokens = p.tokens || {};
@@ -34,6 +38,17 @@ export function resolveProject(project) {
       const drawn = decorations.map((d, i) => ({ ...structuredClone(d), id: d.id ? `${d.id}_${si}` : `decor_all_${si}_${i}` }));
       s.layers = [...drawn, ...s.layers];
     }
+  }
+
+  // components: a compound layer expands into its group of primitives. A missing
+  // id gets a stable fallback so two id-less components can't collide.
+  for (const [si, s] of (p.screens || []).entries()) {
+    if (!Array.isArray(s.layers)) continue;
+    s.layers = s.layers.flatMap((l, li) => {
+      if (!l || !l.component) return [l];
+      if (!COMPONENTS[l.component]) throw new Error(`unknown component "${l.component}" — one of: ${Object.keys(COMPONENTS).join(', ')}`);
+      return COMPONENTS[l.component]({ ...l, id: l.id || `cmp_${si}_${li}` });
+    });
   }
 
   // named text styles: `style: "eyebrow"` fills the preset's fields as defaults,
@@ -53,7 +68,13 @@ export function resolveProject(project) {
   // so an undefined @handle in copy is left alone)
   const sub = (str) => str.replace(/@([A-Za-z][\w-]*)/g, (m, name) => (name in tokens ? tokens[name] : m));
   const walk = (o) => {
-    if (Array.isArray(o)) { o.forEach(walk); return; }
+    if (Array.isArray(o)) {
+      for (let i = 0; i < o.length; i++) {
+        if (typeof o[i] === 'string') o[i] = sub(o[i]);
+        else walk(o[i]);
+      }
+      return;
+    }
     if (o && typeof o === 'object') {
       for (const k of Object.keys(o)) {
         if (typeof o[k] === 'string') o[k] = sub(o[k]);

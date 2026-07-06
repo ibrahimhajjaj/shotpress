@@ -33,7 +33,7 @@ npx shotpress render-all project.json --stores appstore,play --zip
 | `frames [install]` | official Apple bezels, downloaded from Apple's CDN after accepting Apple's terms — never bundled |
 | `lint <project.json>` | design-quality findings: type scale, contrast, social proof, safe zones, composition rhythm, text collisions (`--measure` for line-count/bbox per layer without rendering, `--rules` to list every rule + threshold) |
 | `packs` / `formats` | list options as JSON |
-| `schema` | authoritative layer schema — every type, its fields, enums and defaults (`--markdown` for a catalogue); `pose` lists named 3D device poses |
+| `schema` | authoritative layer schema — every type, its fields, enums and defaults (`--markdown` for a catalogue); `pose` lists 3D device poses, `components` lists compound layers |
 | `resolve <project.json>` | expand a project's `tokens`/`styles`/`decorations`/`pose` design system into concrete layers |
 | `decor [kind]` | generate on-brand SVG depth (aurora mesh, grain, glow, blob, rings, waves, image `mask`); `--json` prints a paste-ready `bg`/layer snippet, `--seed` keeps a set consistent |
 | `validate <project.json>` | schema check, non-zero exit + JSON errors on failure |

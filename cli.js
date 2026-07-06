@@ -10,6 +10,7 @@ import { buildProject, launchHarness, reflowProject, introspectLayers } from './
 import { buildSchema, schemaMarkdown, buildKitchenSink } from './src/schema-doc.js';
 import { LAYER_TYPES, LAYER_ALIASES } from './src/schema.js';
 import { resolveProject, POSES } from './src/resolve.js';
+import { componentList } from './src/components.js';
 import { discoverExternalPacks, loadPackFile } from './src/external-packs.js';
 import { fastlanePath } from './src/fastlane.js';
 import { installFrames, listFrames, APPLE_BEZELS, APPLE_TERMS_URL } from './src/frames.js';
@@ -38,6 +39,7 @@ Usage:
   shotpress decor [kind]               generate on-brand background/overlay SVG (no kind = list)
   shotpress schema                     authoritative layer schema — fields, enums, defaults (--markdown)
   shotpress pose                       list named 3D device pose presets (device.pose)
+  shotpress components                 list compound layers (component:"stat"|"chip"|…) + params
   shotpress validate <project.json>    validate a project spec
   shotpress resolve <project.json>     expand tokens/styles/decorations to concrete layers
   shotpress lint <project.json>        design-quality checks (numeric, pre-render)
@@ -557,6 +559,7 @@ try {
       break;
     }
     case 'pose': process.stdout.write(JSON.stringify(POSES, null, 2) + '\n'); break;
+    case 'components': process.stdout.write(JSON.stringify(componentList(), null, 2) + '\n'); break;
     case 'decor': {
       const { values: v, positionals } = parse(rest);
       const kind = positionals[0];
@@ -607,7 +610,7 @@ try {
     case 'edit': {
       const { values: v, positionals } = parse(rest);
       const file = positionals[0];
-      const project = await loadProject(file);
+      const project = await loadResolved(file);
       const check = validateProject(project);
       if (!check.ok) fail(`invalid project: ${check.errors.map(e => `${e.path}: ${e.message}`).join('; ')}`, 1);
       process.stderr.write(`editing ${file} — changes autosave; close the browser window to finish\n`);
@@ -618,7 +621,7 @@ try {
     case 'watch': {
       const { values: v, positionals } = parse(rest);
       const file = positionals[0];
-      const project = await loadProject(file);
+      const project = await loadResolved(file);
       const check = validateProject(project);
       if (!check.ok) fail(`invalid project: ${check.errors.map(e => `${e.path}: ${e.message}`).join('; ')}`, 1);
       const onUpdate = (n, err) => process.stderr.write(err ? `update ${n}: skipped — ${err.message}\n` : `update ${n} reflected\n`);

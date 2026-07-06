@@ -15,6 +15,17 @@ Generated from the engine by `npx shotpress schema --markdown`. `shotpress schem
 | `rot` | number | 0 |
 | `opacity` | number | 1 |
 | `hidden` | boolean | false |
+| `blend` | string |  — CSS mix-blend-mode (screen/overlay/multiply/…) — glows sit naturally on dark with "screen" |
+
+## Depth (shape / icon / device)
+
+shape, icon and device accept these (drawn natively by the engine)
+
+| field | type | default |
+|---|---|---|
+| `shadow` | boolean | object | array |  — true = default drop shadow; {x,y,blur,spread,color} or an array of them = custom |
+| `glow` | object |  — {blur,spread,color} — a coloured halo (device uses a rounded drop-shadow) |
+| `blur` | number |  — gaussian blur in px (shape/icon) |
 
 ## Background — `screen.bg`
 
@@ -44,6 +55,8 @@ Generated from the engine by `npx shotpress schema --markdown`. `shotpress schem
 | `accent` | string | "#ffffff" |
 | `rx3d` | number | 0 |
 | `ry3d` | number | 0 |
+| `glow` | string|null | null |
+| `shadow` | boolean | false |
 
 ## `text`
 
@@ -134,6 +147,9 @@ Generated from the engine by `npx shotpress schema --markdown`. `shotpress schem
 | `radius` | number | 18 |
 | `w0` | number | 140 |
 | `h0` | number | 140 |
+| `shadow` | boolean | false |
+| `glow` | string|null | null |
+| `blur` | number | 0 |
 
 ## `icon`
 
@@ -146,6 +162,9 @@ Generated from the engine by `npx shotpress schema --markdown`. `shotpress schem
 | `iconBg` | string | "#6d5cf5" |
 | `bgShape` | string | "circle" |
 | `size` | number | 46 |
+| `shadow` | boolean | false |
+| `glow` | string|null | null |
+| `blur` | number | 0 |
 
 ## `feature`
 

@@ -53,6 +53,36 @@ test('decorations are prepended (behind content) to every screen with unique ids
   assert.notEqual(r.screens[0].layers[0].id, r.screens[1].layers[0].id); // unique per screen
 });
 
+test('tokens resolve inside arrays, not just object values', () => {
+  const p = base({ tokens: { accent: '#2a6fdb' }, brand: { accent: '@accent', colors: ['@accent', '#000'] } });
+  const r = resolveProject(p);
+  assert.deepEqual(r.brand.colors, ['#2a6fdb', '#000']);
+});
+
+test('a component layer expands into its group of primitives', () => {
+  const p = base({ screens: [{ bg: { type: 'solid', value: '#000', pattern: 'none', image: null }, layers: [{ id: 's', component: 'stat', cx: 180, cy: 200, value: '3x', label: 'faster' }] }] });
+  const layers = resolveProject(p).screens[0].layers;
+  assert.ok(layers.length >= 2, 'stat should expand to value + label');
+  assert.ok(layers.every(l => !l.component), 'component key is consumed');
+  assert.ok(layers.some(l => l.type === 'text' && l.text === '3x'));
+  assert.ok(layers.some(l => l.type === 'text' && l.text === 'faster'));
+});
+
+test('an unknown component name throws a clear error', () => {
+  const p = base({ screens: [{ bg: { type: 'solid', value: '#000', pattern: 'none', image: null }, layers: [{ id: 'x', component: 'nope', cx: 1, cy: 1 }] }] });
+  assert.throws(() => resolveProject(p), /unknown component "nope"/);
+});
+
+test('id-less components get unique ids (no undefined collisions)', () => {
+  const p = base({ screens: [{ bg: { type: 'solid', value: '#000', pattern: 'none', image: null }, layers: [
+    { component: 'stat', cx: 1, cy: 1, value: 'A' },
+    { component: 'stat', cx: 1, cy: 1, value: 'B' },
+  ] }] });
+  const ids = resolveProject(p).screens[0].layers.map(l => l.id);
+  assert.equal(new Set(ids).size, ids.length, `duplicate ids: ${ids}`);
+  assert.ok(!ids.some(id => id.startsWith('undefined')), `ids: ${ids}`);
+});
+
 test('named device pose expands to rx3d/ry3d', () => {
   const p = base({ screens: [{ bg: { type: 'solid', value: '#000', pattern: 'none', image: null }, layers: [{ id: 'd', type: 'device', cx: 180, cy: 400, kind: 'phone', os: 'ios', pose: 'hero-left' }] }] });
   const d = resolveProject(p).screens[0].layers[0];

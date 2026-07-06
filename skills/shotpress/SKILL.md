@@ -117,6 +117,17 @@ device layers or the synthetic (iOS-styled) bar doubles it — lint flags this.
   directory (family = the file's base name) so `font: "'MyFont', sans-serif"`
   renders offline. The four bundled families (Space Grotesk, Manrope, Instrument
   Serif, Cairo) always work; other Google families load from the network.
+- Native depth on `shape` / `icon` / `device`: `shadow` (`true` for a default
+  drop shadow, or `{x,y,blur,spread,color}` / an array for custom), `glow`
+  (`{blur,spread,color}` — a device glow uses a rounded drop-shadow to lift the
+  phone off a dark ground), and `blur` (px) on shape/icon. A `shape` `fill` also
+  takes a CSS gradient string, not just a hex. Any layer takes `blend` (CSS
+  mix-blend-mode); `blend:"screen"` makes a coloured glow sit naturally on dark.
+- Compound layers: `component:"stat"|"chip"|"avatar-stack"|"rating-row"|"feature-list"`
+  on a layer expands into a positioned group (a big metric + label, a floating
+  notification card, overlapping avatars, a proof row, a feature stack). Pass the
+  params from `shotpress components`; tweak the expanded primitives after with
+  `shotpress resolve`.
 - Device layers: `kind` (phone/tablet/mac/watch), `bezel` (black/white/clay),
   `notch` (auto/island/notch/punch/none), `treatment` (plain/bleed/angled/
   compare/duo/pano/multi), and `rx3d`/`ry3d` for a 3D perspective pose.

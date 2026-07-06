@@ -33,6 +33,15 @@ export function buildSchema(introspected) {
         cx: { type: 'number' }, cy: { type: 'number' },
         scale: { type: 'number', default: 1 }, rot: { type: 'number', default: 0 },
         opacity: { type: 'number', default: 1 }, hidden: { type: 'boolean', default: false },
+        blend: { type: 'string', note: 'CSS mix-blend-mode (screen/overlay/multiply/…) — glows sit naturally on dark with "screen"' },
+      },
+    },
+    depth: {
+      note: 'shape, icon and device accept these (drawn natively by the engine)',
+      fields: {
+        shadow: { type: 'boolean | object | array', note: 'true = default drop shadow; {x,y,blur,spread,color} or an array of them = custom' },
+        glow: { type: 'object', note: '{blur,spread,color} — a coloured halo (device uses a rounded drop-shadow)' },
+        blur: { type: 'number', note: 'gaussian blur in px (shape/icon)' },
       },
     },
     bg: {
@@ -80,6 +89,7 @@ export function schemaMarkdown(schema) {
   const out = ['# Layer catalogue', '', schema.note, '',
     'Generated from the engine by `npx shotpress schema --markdown`. `shotpress schema --json` gives the machine-readable form.', '',
     '## Every layer carries these', '', ...table(schema.common.fields),
+    ...(schema.depth ? ['', '## Depth (shape / icon / device)', '', schema.depth.note, '', ...table(schema.depth.fields)] : []),
     '', '## Background — `screen.bg`', '', ...table(schema.bg.fields)];
   for (const [t, d] of Object.entries(schema.layers)) {
     out.push('', `## \`${t}\``, '', ...table(d.fields));
