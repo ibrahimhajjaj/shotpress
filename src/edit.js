@@ -13,7 +13,7 @@ export function restorePaths(json, map) {
   return out;
 }
 
-function collectPathMap(original, inlined) {
+export function collectPathMap(original, inlined) {
   const map = new Map();
   const walk = (a, b) => {
     if (typeof a === 'string' && typeof b === 'string' && a !== b && b.startsWith('data:')) map.set(b, a);

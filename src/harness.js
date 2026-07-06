@@ -181,8 +181,9 @@ export async function openEngine(harness, { deviceScaleFactor = 1, viewport = { 
 
 // The editor's logic class isn't exposed on window; the runtime hosts it as
 // `stateNode.logic` on a wrapper component, reachable through React's fiber
-// tree from any node the editor rendered. Runs in page context.
-const GET_INSTANCE = `(() => {
+// tree from any node the editor rendered. Runs in page context. Exported so the
+// browser-side watch client can locate the same instance without CDP.
+export const GET_INSTANCE = `(() => {
   function logicOf(stateNode) {
     if (!stateNode) return null;
     if (typeof stateNode.buildPackScreens === 'function') return stateNode;

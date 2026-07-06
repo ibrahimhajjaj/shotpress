@@ -29,6 +29,7 @@ npx shotpress render-all project.json --stores appstore,play --zip
 | `simshot <ios\|android>` | screenshot the booted simulator/emulator; `--flow` runs a [Maestro](https://maestro.mobile.dev) flow and collects its `takeScreenshot` output; `--video` records instead (with `--flow`: the whole driven session) |
 | `variants <project.json>` | emit validated, lint-scored A/B variant projects for App Store custom product pages |
 | `edit <project.json>` | open the visual editor in a browser; every change autosaves back to the file |
+| `watch <project.json>` | live board in your browser, synced both ways with the file — watch a set compose as it's edited, hand-tweak it, then hit Export for store-exact PNGs; self-contained/offline (`--window` for a dedicated Chromium window, `--no-open` to just print the URL) |
 | `frames [install]` | official Apple bezels, downloaded from Apple's CDN after accepting Apple's terms — never bundled |
 | `lint <project.json>` | design-quality findings: type scale, contrast, social proof, safe zones, composition rhythm |
 | `packs` / `formats` | list options as JSON |

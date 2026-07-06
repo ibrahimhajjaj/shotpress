@@ -17,6 +17,8 @@ import { captureRoutes } from './src/capture.js';
 import { simShot } from './src/simshot.js';
 import { emitVariants } from './src/variants.js';
 import { editProject } from './src/edit.js';
+import { watchProject } from './src/watch.js';
+import { watchServe } from './src/watch-server.js';
 import { runDoctor } from './src/doctor.js';
 
 const USAGE = `shotpress — App Store / Google Play screenshot renderer
@@ -33,6 +35,7 @@ Usage:
   shotpress lint <project.json>        design-quality checks (numeric, pre-render)
   shotpress variants <project.json>    emit A/B variant projects for CPP tests
   shotpress edit <project.json>        open the visual editor; edits autosave back
+  shotpress watch <project.json>       live board in your browser; two-way file sync
   shotpress frames [install]           official Apple bezels (downloaded from Apple)
   shotpress doctor                     preflight: node, engine files, browser
 
@@ -95,6 +98,10 @@ variants options:
   --out <dir>         where variant project files go (default ./shotpress-variants)
   --render            also render each variant (project format) into <out>/<id>/
   --json              print a JSON manifest
+
+watch options:
+  --window            use a dedicated Chromium window instead of your browser
+  --no-open           print the URL instead of opening the browser (remote/SSH)
 
 global:
   --browser-path <p>  use an existing Chromium instead of Playwright's
@@ -162,6 +169,8 @@ function parseUnsafe(argv, extra = {}) {
       'crop-bottom': { type: 'string', default: '0' },
       mask: { type: 'string', multiple: true },
       sketch: { type: 'boolean', default: false },
+      window: { type: 'boolean', default: false },
+      'no-open': { type: 'boolean', default: false },
       help: { type: 'boolean', default: false },
       ...extra,
     },
@@ -451,6 +460,37 @@ try {
       process.stderr.write(`editing ${file} — changes autosave; close the browser window to finish\n`);
       const { saves } = await editProject(file, { browserPath: browserPathOf(v) });
       process.stderr.write(`done — ${saves} save${saves === 1 ? '' : 's'} written\n`);
+      break;
+    }
+    case 'watch': {
+      const { values: v, positionals } = parse(rest);
+      const file = positionals[0];
+      const project = await loadProject(file);
+      const check = validateProject(project);
+      if (!check.ok) fail(`invalid project: ${check.errors.map(e => `${e.path}: ${e.message}`).join('; ')}`, 1);
+      const onUpdate = (n, err) => process.stderr.write(err ? `update ${n}: skipped — ${err.message}\n` : `update ${n} reflected\n`);
+      if (v.window) {
+        // dedicated Chromium window (CDP-driven) — for CI or no default browser
+        process.stderr.write(`watching ${file} — the board updates live as the file changes; close the window to stop\n`);
+        const { updates } = await watchProject(file, { browserPath: browserPathOf(v), onUpdate });
+        process.stderr.write(`done — ${updates} update${updates === 1 ? '' : 's'} reflected\n`);
+      } else {
+        // default browser, two-way live sync over loopback
+        const { updates } = await watchServe(file, {
+          open: !v['no-open'],
+          browserPath: browserPathOf(v),
+          outDir: v.out || null,
+          onReady: (url) => process.stderr.write(
+            `watching ${file} at ${url} — edits sync both ways (agent → board, your drags → file), Export button renders store PNGs; Ctrl-C to stop\n`
+            + (v['no-open'] ? `open that URL in your browser\n` : ''),
+          ),
+          onUpdate,
+          onExport: (n, dir, err) => process.stderr.write(
+            err ? `export failed: ${err.message}\n` : `exported ${n} PNG${n === 1 ? '' : 's'} → ${dir}\n`,
+          ),
+        });
+        process.stderr.write(`\ndone — ${updates} update${updates === 1 ? '' : 's'} reflected\n`);
+      }
       break;
     }
     case 'capture': await cmdCapture(rest); break;

@@ -136,6 +136,24 @@ folder, ready for CPP uploads.
 browser and every change autosaves back to the file. Local image paths are
 preserved on save. Pick the loop back up afterwards with lint + render.
 
+9. **Watch it compose live.** When the user wants to see the set built in front
+of them — the whole board updating as you work — start `npx shotpress watch
+project.json` **in the background** (it serves a live board and holds until
+Ctrl-C) and then do the `new` / capture / copy edits on the file as usual. It
+opens the board in the user's default browser and syncs **both ways** over
+loopback: every save you write appears on the board within a poll, and any layer
+the user drags by hand is written back to the file. The user watches screens and
+copy land in real time, tweaks anything themselves, and when happy clicks
+**Export store PNGs** on the board — that runs the same headless renderer the CLI
+uses (store-exact pixels, blur/3D intact), so there's no need to leave the tab.
+`render-all` still works if you want the full store matrix from the terminal.
+Notes: the file is the single source of truth; the board is fully self-contained
+(engine runtime is served vendored, no CDN, works offline); a transient bad edit
+(missing image, unknown format) is skipped with a note and it keeps watching;
+`--out <dir>` sets where Export writes (default `./shotpress-out`); `--window`
+uses a dedicated Chromium window instead of the default browser (CI / no
+browser); `--no-open` just prints the URL (remote/SSH).
+
 ## Notes
 
 - Browser resolution: Playwright's cached Chromium, then system Google Chrome.
