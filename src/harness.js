@@ -63,14 +63,14 @@ function browserInstallHint() {
 
 // Resolution order: explicit path → Playwright's cached Chromium → system
 // Chrome. Only then give up, with the exact install command.
-export async function launchBrowser(browserPath, { headless = true } = {}) {
-  if (browserPath) return chromium.launch({ headless, executablePath: browserPath });
+export async function launchBrowser(browserPath, { headless = true, args = [] } = {}) {
+  if (browserPath) return chromium.launch({ headless, executablePath: browserPath, args });
   try {
-    return await chromium.launch({ headless });
+    return await chromium.launch({ headless, args });
   } catch (first) {
     if (!/executable doesn't exist|Looks like Playwright/i.test(String(first.message))) throw first;
     try {
-      return await chromium.launch({ headless, channel: 'chrome' });
+      return await chromium.launch({ headless, channel: 'chrome', args });
     } catch {
       const err = new Error(`no Chromium found — run: ${browserInstallHint()} (or install Google Chrome, or pass --browser-path)`);
       err.code = 'NO_BROWSER';
