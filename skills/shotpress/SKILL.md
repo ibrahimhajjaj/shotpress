@@ -124,22 +124,17 @@ device layers or the synthetic (iOS-styled) bar doubles it — lint flags this.
   phone off a dark ground), and `blur` (px) on shape/icon. A `shape` `fill` also
   takes a CSS gradient string, not just a hex. Any layer takes `blend` (CSS
   mix-blend-mode); `blend:"screen"` makes a coloured glow sit naturally on dark.
-- Real 3D device frames: `render --3d` renders every plain/angled phone and tablet
-  as an actual WebGL 3D device (rounded metal body with a visible edge, a glass
-  screen carrying the device's `image`, environment reflections, studio light, a
-  grounded contact shadow) instead of the flat bezel. The device's `rx3d`/`ry3d`
-  (or a `pose`) drive the camera angle. Opt in per device with `"render3d": true`
-  instead of the global flag. This is the single biggest lift from "template" to
-  "first-party" look. Caveat: WebGL output is deterministic on one machine but
-  not byte-identical across GPUs, so `--3d` renders aren't hermetic the way the
-  flat renders are; it also spins up a separate render pass (slower). Use it for
-  the final export, keep iterating layout on the flat/`watch` board.
-- For an exact real device, point a device layer at your own model:
+- Real 3D device: point a device layer at your own model with
   `"model3d": "iphone.glb"` (a glTF/GLB you have the rights to — shotpress ships
-  none and hosts none). It's centred and scaled automatically, the device's
-  `image` maps onto the mesh named `screen`/`display`/`glass` (override with
-  `"screenMesh"`), and `rx3d`/`ry3d`/`pose` drive the camera. Renders whether or
-  not `--3d` is set.
+  none and hosts none). It renders through WebGL (environment reflections, studio
+  light, grounded contact shadow) and swaps in for the flat bezel. The model is
+  centred and scaled automatically; the device's `image` maps onto the mesh named
+  `screen`/`display`/`glass` (override with `"screenMesh"`); `rx3d`/`ry3d` (or a
+  `pose`) drive the camera angle. The rendered device only looks as good as the
+  glb you feed it. Caveat: WebGL output is deterministic on one machine but not
+  byte-identical across GPUs, so `model3d` renders aren't hermetic the way the
+  flat renders are, and it spins up a separate render pass (slower) — use it for
+  the final export, keep iterating layout on the flat board.
 - Compound layers: `component:"stat"|"chip"|"avatar-stack"|"rating-row"|"feature-list"`
   on a layer expands into a positioned group (a big metric + label, a floating
   notification card, overlapping avatars, a proof row, a feature stack). Pass the

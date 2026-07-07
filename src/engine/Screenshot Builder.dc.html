@@ -862,7 +862,7 @@ class Component extends DCLogic {
     else if(type==='badge') Object.assign(l,{variant:'pill',text:'Editor’s Choice',appName:br.appName});
     else if(type==='icon') Object.assign(l,{glyph:'✓',color:'#ffffff',iconBg:A,bgShape:'circle',size:46,shadow:false,glow:null,blur:0});
     else if(type==='feature') Object.assign(l,{glyph:'✦',title:'Lightning fast',sub:'Built for speed',iconColor:'#ffffff',iconBg:A,bgShape:'round',titleColor:'#ffffff',subColor:'rgba(255,255,255,.72)',font:"'Manrope', sans-serif",w0:Math.round(W*0.74)});
-    else if(type==='device'){ const ff=this.fmt(); Object.assign(l,{kind:ff.kind==='graphic'?'phone':ff.kind,os:ff.os,orientation:'portrait',showStatus:false,statusDark:false,image:null,beforeImage:null,treatment:'plain',bezel:br.bezel||'black',showVideo:false,accent:'#ffffff',rx3d:0,ry3d:0,glow:null,shadow:false,render3d:false}); l.scale=(H*0.42)/this.kindBaseH(l.kind,'portrait'); }
+    else if(type==='device'){ const ff=this.fmt(); Object.assign(l,{kind:ff.kind==='graphic'?'phone':ff.kind,os:ff.os,orientation:'portrait',showStatus:false,statusDark:false,image:null,beforeImage:null,treatment:'plain',bezel:br.bezel||'black',showVideo:false,accent:'#ffffff',rx3d:0,ry3d:0,glow:null,shadow:false}); l.scale=(H*0.42)/this.kindBaseH(l.kind,'portrait'); }
     else if(type==='logo') Object.assign(l,{src:br.logo||null,radius:14,fit:'contain',shadow:false,isLogo:true,w0:120});
     else if(type==='image') Object.assign(l,{src:null,radius:16,fit:'cover',shadow:true,w0:160});
     else if(type==='shape') Object.assign(l,{shape:'rect',fill:A,stroke:false,strokeColor:'#ffffff',strokeW:2,radius:18,w0:140,h0:140,shadow:false,glow:null,blur:0});

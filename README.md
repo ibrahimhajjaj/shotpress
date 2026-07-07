@@ -22,7 +22,7 @@ npx shotpress render-all project.json --stores appstore,play --zip
 
 | command | what it does |
 |---|---|
-| `render <project.json>` | render every screen to PNG/JPEG/SVG (`--3d` renders phones/tablets as real WebGL 3D devices with glass, reflections and a grounded shadow; `--contact` for a whole-set montage; `--fonts <dir>` for offline custom faces) |
+| `render <project.json>` | render every screen to PNG/JPEG/SVG (`--contact` for a whole-set montage; `--fonts <dir>` for offline custom faces) |
 | `render-all <project.json>` | batch-render at every store size (`--stores appstore,play,mac,watch`) |
 | `new` | scaffold a project (`--pack`, `--format`, `--app-name`, `--accent`, `--screens`, `--honest` to drop demo social proof, `--kitchen-sink` for a one-of-every-layer reference) |
 | `capture <url>` | screenshot a live web app at device-correct viewport/DPR (`--routes` or `--discover`, `--dark`, `--cookies`, `--wait-selector`) |

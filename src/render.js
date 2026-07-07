@@ -4,7 +4,7 @@ import { FORMATS, outputSize } from './formats.js';
 import { mirrorProject } from './rtl.js';
 import { resolveFrame } from './frames.js';
 import { launchHarness, openEngine, injectProject, ensureFonts, usedFamilies, evalOnInstance } from './harness.js';
-import { renderDevices3d, frameLayer, KINDS_3D, TREATMENTS_3D } from './device3d.js';
+import { renderDevices3d, frameLayer, TREATMENTS_3D } from './device3d.js';
 
 const IMG_MIME = {
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
@@ -155,7 +155,6 @@ export async function renderProject(project, opts = {}, sharedHarness = null) {
     name = 'screen',
     rtl = false,
     contact = false,
-    threeD = false,
     fontsDir = null,
     browserPath = null,
     baseDir = process.cwd(),
@@ -169,34 +168,29 @@ export async function renderProject(project, opts = {}, sharedHarness = null) {
   if (rtl) inlined = mirrorProject(inlined);
   const warnings = [];
 
-  // real 3D device frames (opt-in): render each eligible device through WebGL and
-  // swap it for a transparent PNG image layer at the same z-position, so the rest
-  // of the composition (background, copy) renders around it unchanged. A WebGL
-  // failure falls back to the flat frame rather than sinking the whole render.
-  // a device with its own `model3d` is eligible regardless of kind; --3d applies
-  // the procedural body to plain/angled phones and tablets.
-  const eligible3d = (l) => l.type === 'device' && (threeD || l.render3d || l.model3d) && TREATMENTS_3D.has(l.treatment) && (l.model3d || KINDS_3D.has(l.kind));
-  const want3d = threeD || (inlined.screens || []).some(s => (s.layers || []).some(l => l.type === 'device' && (l.render3d || l.model3d)));
-  if (want3d) {
-    const jobs = [];
-    for (const [si, s] of (inlined.screens || []).entries()) {
-      for (const [li, l] of (s.layers || []).entries()) {
-        if (eligible3d(l)) jobs.push({ si, li, l });
-      }
+  // a device layer can point at its own glTF/GLB (`model3d`): render it through
+  // WebGL and swap it for a transparent PNG image layer at the same z-position, so
+  // the rest of the composition (background, copy) renders around it unchanged. A
+  // WebGL failure falls back to the flat frame rather than sinking the whole render.
+  const eligible3d = (l) => l.type === 'device' && l.model3d && TREATMENTS_3D.has(l.treatment);
+  const jobs = [];
+  for (const [si, s] of (inlined.screens || []).entries()) {
+    for (const [li, l] of (s.layers || []).entries()) {
+      if (eligible3d(l)) jobs.push({ si, li, l });
     }
-    if (jobs.length) {
-      try {
-        const specs = await Promise.all(jobs.map(async ({ l }) => ({
-          kind: l.kind, bezel: l.bezel || inlined.brand?.bezel || 'black', rx3d: l.rx3d || 0, ry3d: l.ry3d || 0,
-          screenshot: l.image || null,
-          model3d: l.model3d ? await modelDataUrl(l.model3d, baseDir) : null,
-          screenMesh: l.screenMesh || null,
-        })));
-        const pngs = await renderDevices3d(specs, { browserPath });
-        jobs.forEach((j, i) => { inlined.screens[j.si].layers[j.li] = frameLayer(j.l, pngs[i].dataUrl); });
-      } catch (e) {
-        warnings.push(`3D device render failed (${e.message}); fell back to flat frames`);
-      }
+  }
+  if (jobs.length) {
+    try {
+      const specs = await Promise.all(jobs.map(async ({ l }) => ({
+        kind: l.kind, rx3d: l.rx3d || 0, ry3d: l.ry3d || 0,
+        screenshot: l.image || null,
+        model3d: await modelDataUrl(l.model3d, baseDir),
+        screenMesh: l.screenMesh || null,
+      })));
+      const pngs = await renderDevices3d(specs, { browserPath });
+      jobs.forEach((j, i) => { inlined.screens[j.si].layers[j.li] = frameLayer(j.l, pngs[i].dataUrl); });
+    } catch (e) {
+      warnings.push(`3D model render failed (${e.message}); fell back to flat frames`);
     }
   }
   // device layers may request official Apple bezels: frame: "iphone[:variant]"

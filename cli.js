@@ -61,7 +61,6 @@ render options:
   --screens 1,3,5     subset, 1-indexed (default all)
   --name <prefix>     filename prefix (default "screen")
   --rtl               mirror the layout for RTL markets (supply translated copy)
-  --3d                render phones/tablets as real WebGL 3D devices (glass, reflections, shadow)
   --contact           also write a numbered montage of the whole set
   --fonts <dir>       serve extra font files (family = file name) for offline custom faces
   --zip               also write a zip bundle
@@ -198,7 +197,6 @@ function parseUnsafe(argv, extra = {}) {
       render: { type: 'boolean', default: false },
       rtl: { type: 'boolean', default: false },
       contact: { type: 'boolean', default: false },
-      '3d': { type: 'boolean', default: false },
       fonts: { type: 'string' },
       fastlane: { type: 'boolean', default: false },
       locale: { type: 'string', default: 'en-US' },
@@ -289,7 +287,6 @@ async function cmdRender(argv) {
     name: v.name,
     rtl: v.rtl,
     contact: v.contact,
-    threeD: v['3d'],
     fontsDir: v.fonts || null,
     browserPath: browserPathOf(v),
     baseDir: path.dirname(path.resolve(file)),
@@ -338,7 +335,6 @@ async function cmdRenderAll(argv) {
           name: v.name,
           rtl: v.rtl,
           contact: v.contact,
-          threeD: v['3d'],
           fontsDir: v.fonts || null,
           baseDir: path.dirname(path.resolve(file)),
           onProgress: progress(v.json),

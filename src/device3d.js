@@ -14,16 +14,16 @@ const GL_ARGS = ['--enable-unsafe-swiftshader', '--use-gl=angle', '--use-angle=s
 // Aspect (height/width) of each device body, matching the flat frame table.
 const DEVICE_ASPECT = { phone: 462 / 226, tablet: 486 / 366, mac: 404 / 660, watch: 192 / 158 };
 
-// The scene: a real 3D device (rounded metal body, glass screen carrying the app
-// screenshot, environment reflections, studio light, grounded contact shadow),
-// rendered to a transparent PNG. Rebuilds per call so screenshot/kind/pose vary.
+// The scene: a user-supplied glTF/GLB device model, lit by an environment for
+// reflections plus a studio rig, with the app screenshot mapped onto its screen
+// mesh and a grounded contact shadow, rendered to a transparent PNG. Rebuilds per
+// call so model/screenshot/pose vary.
 const SCENE_HTML = `<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent}</style>
 <script type="importmap">{"imports":{"three":"/three.module.js"}}</script></head>
 <body><canvas id="c"></canvas>
 <script type="module">
 import * as THREE from 'three';
 import { RoomEnvironment } from '/RoomEnvironment.js';
-import { RoundedBoxGeometry } from '/RoundedBoxGeometry.js';
 import { GLTFLoader } from '/GLTFLoader.js';
 
 const canvas = document.getElementById('c');
@@ -34,8 +34,6 @@ renderer.toneMappingExposure = 1.05;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 const pmrem = new THREE.PMREMGenerator(renderer);
 const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-
-const BEZEL = { black: '#141416', white: '#e7e7ea', clay: '#c9c2ff' };
 
 function shadowTexture() {
   const s = 256, cv = document.createElement('canvas'); cv.width = cv.height = s;
@@ -62,11 +60,11 @@ window.__renderDevice = async (p) => {
   const cam = new THREE.PerspectiveCamera(28, W / H, 0.1, 100);
 
   const aspect = { phone: ${DEVICE_ASPECT.phone}, tablet: ${DEVICE_ASPECT.tablet}, mac: ${DEVICE_ASPECT.mac}, watch: ${DEVICE_ASPECT.watch} }[p.kind] || ${DEVICE_ASPECT.phone};
-  const w = 1, h = aspect, depth = 0.135, radius = p.kind === 'watch' ? 0.34 : (p.kind === 'tablet' ? 0.06 : 0.13);
+  const w = 1, h = aspect;
 
   const device = new THREE.Group();
 
-  if (p.model3d) {
+  {
     // a user-supplied glTF/GLB device model (they own the rights to it); centre
     // it, scale to the unit height, and drop the app screenshot on the screen mesh
     const gltf = await gltfLoader.loadAsync(p.model3d);
@@ -87,32 +85,6 @@ window.__renderDevice = async (p) => {
     const names = []; model.traverse((o) => { if (o.isMesh) names.push(o.name || o.material?.name || '?'); });
     window.__meshNames = names;
     device.add(model); disposables.push(model);
-  } else {
-  // metal body
-  const bodyGeo = new RoundedBoxGeometry(w, h, depth, 6, radius);
-  const bodyMat = new THREE.MeshPhysicalMaterial({ color: BEZEL[p.bezel] || BEZEL.black, metalness: 0.9, roughness: 0.38, clearcoat: 0.5, clearcoatRoughness: 0.35, envMapIntensity: 1.1 });
-  const body = new THREE.Mesh(bodyGeo, bodyMat); device.add(body); disposables.push(body);
-
-  // glass screen with the app screenshot
-  const inset = p.kind === 'watch' ? 0.1 : 0.045;
-  const sw = w - inset * 2, sh = h - inset * 2, sr = Math.max(0.01, radius - inset);
-  const screenShape = new THREE.Shape();
-  const rr = (ctx, x, y, ww, hh, r) => { ctx.moveTo(x + r, y); ctx.lineTo(x + ww - r, y); ctx.quadraticCurveTo(x + ww, y, x + ww, y + r); ctx.lineTo(x + ww, y + hh - r); ctx.quadraticCurveTo(x + ww, y + hh, x + ww - r, y + hh); ctx.lineTo(x + r, y + hh); ctx.quadraticCurveTo(x, y + hh, x, y + hh - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); };
-  rr(screenShape, -sw/2, -sh/2, sw, sh, sr);
-  const screenGeo = new THREE.ShapeGeometry(screenShape, 24);
-  const uv = screenGeo.attributes.uv, pos = screenGeo.attributes.position;
-  for (let i = 0; i < uv.count; i++) { uv.setXY(i, (pos.getX(i) + sw/2) / sw, (pos.getY(i) + sh/2) / sh); }
-  let screenMat;
-  if (p.screenshot) {
-    const tex = await new THREE.TextureLoader().loadAsync(p.screenshot);
-    tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
-    screenMat = new THREE.MeshPhysicalMaterial({ map: tex, roughness: 0.16, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 0.85, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.28 });
-  } else {
-    screenMat = new THREE.MeshPhysicalMaterial({ color: 0x0c0c12, roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.08, envMapIntensity: 1.0 });
-  }
-  const screen = new THREE.Mesh(screenGeo, screenMat);
-  screen.position.z = depth / 2 + 0.001;
-  device.add(screen); disposables.push(screen);
   }
 
   // pose: pitch (rx3d) / yaw (ry3d) in degrees
@@ -160,11 +132,10 @@ export function frameLayer(l, dataUrl) {
   return { id: l.id, type: 'image', cx: l.cx, cy: l.cy, scale: 1, rot: l.rot || 0, w0, fit: 'contain', src: dataUrl };
 }
 
-export const KINDS_3D = new Set(['phone', 'tablet']);
 export const TREATMENTS_3D = new Set(['plain', 'angled', undefined, null]);
 
-// Renders a batch of device specs to transparent PNGs in one browser session.
-// Each spec: { screenshot?: dataURL, kind, bezel, rx3d, ry3d }. Returns data URLs.
+// Renders a batch of model specs to transparent PNGs in one browser session.
+// Each spec: { model3d: dataURL, screenshot?: dataURL, kind, rx3d, ry3d, screenMesh? }.
 export async function renderDevices3d(specs, { browserPath = null, px = 1100 } = {}) {
   if (!specs.length) return [];
   const server = http.createServer(async (req, res) => {
