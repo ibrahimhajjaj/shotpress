@@ -1,6 +1,6 @@
 {
   "name": "shotpress",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "Generate App Store / Google Play screenshot sets: framed device mockups on styled backgrounds with headlines, ratings and badges, rendered at exact store pixel sizes",
   "author": {
     "name": "Ibrahim Hajjaj",
