@@ -134,6 +134,12 @@ device layers or the synthetic (iOS-styled) bar doubles it — lint flags this.
   not byte-identical across GPUs, so `--3d` renders aren't hermetic the way the
   flat renders are; it also spins up a separate render pass (slower). Use it for
   the final export, keep iterating layout on the flat/`watch` board.
+- For an exact real device, point a device layer at your own model:
+  `"model3d": "iphone.glb"` (a glTF/GLB you have the rights to — shotpress ships
+  none and hosts none). It's centred and scaled automatically, the device's
+  `image` maps onto the mesh named `screen`/`display`/`glass` (override with
+  `"screenMesh"`), and `rx3d`/`ry3d`/`pose` drive the camera. Renders whether or
+  not `--3d` is set.
 - Compound layers: `component:"stat"|"chip"|"avatar-stack"|"rating-row"|"feature-list"`
   on a layer expands into a positioned group (a big metric + label, a floating
   notification card, overlapping avatars, a proof row, a feature stack). Pass the

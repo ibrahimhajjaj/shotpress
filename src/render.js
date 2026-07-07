@@ -137,6 +137,14 @@ async function contactSheet(page, files, { cols = 4, thumbW = 300, gap = 16, bg 
   return Buffer.from(dataUrl.split(',')[1], 'base64');
 }
 
+const MODEL_MIME = { '.glb': 'model/gltf-binary', '.gltf': 'model/gltf+json' };
+async function modelDataUrl(ref, baseDir) {
+  if (/^(data:|https?:)/.test(ref)) return ref;
+  const file = path.resolve(baseDir, ref);
+  const mime = MODEL_MIME[path.extname(file).toLowerCase()] || 'model/gltf-binary';
+  return `data:${mime};base64,${(await readFile(file)).toString('base64')}`;
+}
+
 export async function renderProject(project, opts = {}, sharedHarness = null) {
   const {
     format = project.format,
@@ -165,17 +173,25 @@ export async function renderProject(project, opts = {}, sharedHarness = null) {
   // swap it for a transparent PNG image layer at the same z-position, so the rest
   // of the composition (background, copy) renders around it unchanged. A WebGL
   // failure falls back to the flat frame rather than sinking the whole render.
-  const want3d = threeD || (inlined.screens || []).some(s => (s.layers || []).some(l => l.type === 'device' && l.render3d));
+  // a device with its own `model3d` is eligible regardless of kind; --3d applies
+  // the procedural body to plain/angled phones and tablets.
+  const eligible3d = (l) => l.type === 'device' && (threeD || l.render3d || l.model3d) && TREATMENTS_3D.has(l.treatment) && (l.model3d || KINDS_3D.has(l.kind));
+  const want3d = threeD || (inlined.screens || []).some(s => (s.layers || []).some(l => l.type === 'device' && (l.render3d || l.model3d)));
   if (want3d) {
     const jobs = [];
     for (const [si, s] of (inlined.screens || []).entries()) {
       for (const [li, l] of (s.layers || []).entries()) {
-        if (l.type === 'device' && (threeD || l.render3d) && KINDS_3D.has(l.kind) && TREATMENTS_3D.has(l.treatment)) jobs.push({ si, li, l });
+        if (eligible3d(l)) jobs.push({ si, li, l });
       }
     }
     if (jobs.length) {
       try {
-        const specs = jobs.map(({ l }) => ({ kind: l.kind, bezel: l.bezel || inlined.brand?.bezel || 'black', rx3d: l.rx3d || 0, ry3d: l.ry3d || 0, screenshot: l.image || null }));
+        const specs = await Promise.all(jobs.map(async ({ l }) => ({
+          kind: l.kind, bezel: l.bezel || inlined.brand?.bezel || 'black', rx3d: l.rx3d || 0, ry3d: l.ry3d || 0,
+          screenshot: l.image || null,
+          model3d: l.model3d ? await modelDataUrl(l.model3d, baseDir) : null,
+          screenMesh: l.screenMesh || null,
+        })));
         const pngs = await renderDevices3d(specs, { browserPath });
         jobs.forEach((j, i) => { inlined.screens[j.si].layers[j.li] = frameLayer(j.l, pngs[i].dataUrl); });
       } catch (e) {

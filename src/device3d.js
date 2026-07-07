@@ -24,6 +24,7 @@ const SCENE_HTML = `<!doctype html><html><head><meta charset="utf-8"><style>html
 import * as THREE from 'three';
 import { RoomEnvironment } from '/RoomEnvironment.js';
 import { RoundedBoxGeometry } from '/RoundedBoxGeometry.js';
+import { GLTFLoader } from '/GLTFLoader.js';
 
 const canvas = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
@@ -47,7 +48,9 @@ function shadowTexture() {
 const SHADOW_TEX = shadowTexture();
 
 let disposables = [];
-function reset() { for (const d of disposables) { d.geometry?.dispose?.(); if (Array.isArray(d.material)) d.material.forEach(m=>m.dispose()); else d.material?.dispose?.(); } disposables = []; }
+function disposeOne(o) { o.traverse?.((n) => { n.geometry?.dispose?.(); if (Array.isArray(n.material)) n.material.forEach(m => m.dispose()); else n.material?.dispose?.(); }); if (!o.traverse) { o.geometry?.dispose?.(); o.material?.dispose?.(); } }
+function reset() { for (const d of disposables) disposeOne(d); disposables = []; }
+const gltfLoader = new GLTFLoader();
 
 window.__renderDevice = async (p) => {
   reset();
@@ -63,6 +66,28 @@ window.__renderDevice = async (p) => {
 
   const device = new THREE.Group();
 
+  if (p.model3d) {
+    // a user-supplied glTF/GLB device model (they own the rights to it); centre
+    // it, scale to the unit height, and drop the app screenshot on the screen mesh
+    const gltf = await gltfLoader.loadAsync(p.model3d);
+    const model = gltf.scene;
+    const bbox = new THREE.Box3().setFromObject(model);
+    const size = new THREE.Vector3(), centre = new THREE.Vector3();
+    bbox.getSize(size); bbox.getCenter(centre);
+    model.position.sub(centre);
+    model.scale.setScalar(h / (size.y || 1));
+    if (p.screenshot) {
+      const tex = await new THREE.TextureLoader().loadAsync(p.screenshot);
+      tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8; tex.flipY = false;
+      const re = new RegExp(p.screenMesh || 'screen|display|glass', 'i');
+      let hit = false;
+      model.traverse((o) => { if (o.isMesh && (re.test(o.name) || re.test(o.material?.name || ''))) { const m = o.material.clone(); m.map = tex; m.emissive = new THREE.Color(0xffffff); m.emissiveMap = tex; m.emissiveIntensity = 0.28; m.roughness = 0.16; m.metalness = 0; m.needsUpdate = true; o.material = m; hit = true; } });
+      window.__screenHit = hit;
+    }
+    const names = []; model.traverse((o) => { if (o.isMesh) names.push(o.name || o.material?.name || '?'); });
+    window.__meshNames = names;
+    device.add(model); disposables.push(model);
+  } else {
   // metal body
   const bodyGeo = new RoundedBoxGeometry(w, h, depth, 6, radius);
   const bodyMat = new THREE.MeshPhysicalMaterial({ color: BEZEL[p.bezel] || BEZEL.black, metalness: 0.9, roughness: 0.38, clearcoat: 0.5, clearcoatRoughness: 0.35, envMapIntensity: 1.1 });
@@ -88,6 +113,7 @@ window.__renderDevice = async (p) => {
   const screen = new THREE.Mesh(screenGeo, screenMat);
   screen.position.z = depth / 2 + 0.001;
   device.add(screen); disposables.push(screen);
+  }
 
   // pose: pitch (rx3d) / yaw (ry3d) in degrees
   device.rotation.x = (p.rx3d || 0) * Math.PI / 180;
