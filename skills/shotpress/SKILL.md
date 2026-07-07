@@ -138,6 +138,14 @@ device layers or the synthetic (iOS-styled) bar doubles it — lint flags this.
   not a UI screen with text or controls near the border, which gets sliced.
   `device.accent` also paints a visible frame edge under `bleed` (it doesn't on
   plain/angled), so leave it unset there unless you want that band.
+- `pano` runs one screenshot across adjacent screens: give the device layer on
+  each of the consecutive screens `treatment:"pano"` with the SAME `image`, and
+  the engine auto-groups them and slices the image left-to-right (screen 1 shows
+  the left portion, screen 2 the next, and so on).
+- Deliberately breaking a rule? Opt out per project with
+  `"lint": { "allow": ["COMPOSITION_REPEAT", "COLOR_SPRAWL"] }` — a brutalist
+  one-treatment set or a multi-ground palette then lints clean, and `lint --json`
+  reports a `suppressed` count so nothing is hidden silently.
 - Positions (`cx`/`cy`) are design-space px for the project's format (e.g.
   iPhone is a 360×780 canvas). Don't hand-convert between formats — rendering
   with `--format` reflows automatically. `lint --measure` prints each layer's

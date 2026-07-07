@@ -124,6 +124,16 @@ test('measure reports wrapped line count and device box', () => {
   assert.ok(d.box.w > 0 && d.box.h > 0);
 });
 
+test('project lint.allow opts out of a rule and reports a suppressed count', () => {
+  const layers = [() => text(), () => device()];
+  const three = project([screen([text(), device()]), screen([text(), device()]), screen([text(), device()])]);
+  assert.ok(rules(three).has('COMPOSITION_REPEAT'));
+  three.lint = { allow: ['COMPOSITION_REPEAT'] };
+  const res = lintProject(three);
+  assert.ok(!res.findings.some(f => f.rule === 'COMPOSITION_REPEAT'));
+  assert.equal(res.suppressed, 1);
+});
+
 test('flags an official bezel on the wrong canvas', () => {
   const p = project([screen([device({ frame: 'iphone' })])]);
   p.format = 'ipad';

@@ -235,6 +235,17 @@ export function evalOnInstance(page, body, args = null) {
   );
 }
 
+// Fills the brand fields the engine assumes are present. A hand-authored or
+// variant brand that omits colors/clayColor/logo would otherwise crash the
+// engine's own render (br.colors.map on undefined), which surfaces only as an
+// opaque board-render timeout — so complete it before it ever reaches the page.
+export function withBrandDefaults(brand = {}) {
+  const accent = brand.accent || '#6d5cf5';
+  const merged = { appName: 'Your App', accent, colors: [accent], bezel: 'black', clayColor: '#9b8cff', logo: null, ...brand };
+  if (!Array.isArray(merged.colors) || !merged.colors.length) merged.colors = [merged.accent];
+  return merged;
+}
+
 // Project state goes in through setState, not localStorage: the payload rides
 // the DevTools protocol, so multi-megabyte inlined screenshots can't hit the
 // ~5MB storage quota and silently boot the default project instead.
@@ -243,7 +254,7 @@ export async function injectProject(page, project) {
     if (!inst.formats[p.format]) return reject(new Error('unknown format ' + p.format));
     inst.setState({
       format: p.format,
-      brand: p.brand || inst.state.brand,
+      brand: p.brand,
       screens: p.screens,
       selected: 0,
       onboard: false,
@@ -255,7 +266,7 @@ export async function injectProject(page, project) {
       if (!ok) return reject(new Error('project injection failed: engine state does not match the spec'));
       resolve();
     });
-  }), { format: project.format, brand: project.brand, screens: project.screens });
+  }), { format: project.format, brand: withBrandDefaults(project.brand), screens: project.screens });
 }
 
 // fonts.ready only covers loads already in flight — lazily-declared families

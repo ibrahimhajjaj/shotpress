@@ -374,7 +374,11 @@ export function lintProject(project) {
     }
   }
 
-  return { findings, count: findings.length };
+  // A project can deliberately opt out of rules it's intentionally breaking:
+  // "lint": { "allow": ["COMPOSITION_REPEAT", "COLOR_SPRAWL"] }
+  const allow = new Set(Array.isArray(project.lint?.allow) ? project.lint.allow : []);
+  const kept = allow.size ? findings.filter(f => !allow.has(f.rule)) : findings;
+  return { findings: kept, count: kept.length, ...(allow.size ? { suppressed: findings.length - kept.length } : {}) };
 }
 
 // Per-layer computed geometry — the same estimates the lint reasons about — so
